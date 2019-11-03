@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="ishop" tagdir="/WEB-INF/tags" %>
 
-<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" trimDirectiveWhitespaces="true"%>
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" trimDirectiveWhitespaces="true" isELIgnored="false" %>
 
 
 <div class="visible-xs-block xs-option-container">
@@ -23,7 +23,8 @@
 				<a data-toggle="collapse" href="#searchOptions">More filters <span class="caret"></span></a>
 			</div>
 		</div>
-		<div id="searchOptions" class="collapse ${!searchForm.categoriesEmpty or !searchForm.producersEmpty ? 'in' : '' }">
+
+		<div id="searchOptions" class="collapse ${searchForm.categoriesNotEmpty or searchForm.producersNotEmpty ? 'in' : '' }">
 
 
 			<ishop:category-filter searchForm="${searchForm}" categories="${CATEGORY_LIST}" />

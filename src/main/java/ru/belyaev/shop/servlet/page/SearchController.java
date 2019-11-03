@@ -29,6 +29,7 @@ public class SearchController extends AbstractController {
         req.setAttribute("pageCount", pageCount(countProduct,Constants.MAX_PRODUCTS_PER_HTML_PAGE));
         req.setAttribute("products", products);
         req.setAttribute("searchForm", searchForm);
+
         req.setAttribute("productCount", countProduct); // quantity product that was found
         RoutingUtil.forwardToPage("search-result.jsp", req, resp);
     }

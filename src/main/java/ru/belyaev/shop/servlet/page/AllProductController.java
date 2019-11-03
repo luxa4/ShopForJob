@@ -2,6 +2,7 @@ package ru.belyaev.shop.servlet.page;
 
 import ru.belyaev.shop.Constants;
 import ru.belyaev.shop.entity.Product;
+import ru.belyaev.shop.form.SearchForm;
 import ru.belyaev.shop.servlet.AbstractController;
 import ru.belyaev.shop.util.RoutingUtil;
 
@@ -18,11 +19,13 @@ public class AllProductController extends AbstractController {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        SearchForm searchForm = createSeachForm(req);
         System.out.println("Сработал контролер products");
         List<Product> products = getProductService().listAllProduct(1, Constants.MAX_PRODUCTS_PER_HTML_PAGE);
         req.setAttribute("products", products);
         int countProduct = getProductService().countAllProducts();
         req.setAttribute("pageCount", pageCount(countProduct,Constants.MAX_PRODUCTS_PER_HTML_PAGE));
+
         RoutingUtil.forwardToPage("products.jsp",req,resp);
     }
 }
