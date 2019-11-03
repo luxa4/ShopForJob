@@ -1,5 +1,7 @@
 package ru.belyaev.shop.util;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -27,4 +29,11 @@ public final class RoutingUtil {
 	public static void redirect(String url, HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		resp.sendRedirect(url);
 	}
+
+	public static void sendJSON (JSONObject json, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("application/json");
+        resp.getWriter().println(json.toString());
+        resp.getWriter().close();
+	}
+
 }

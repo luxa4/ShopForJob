@@ -19,7 +19,7 @@ public class AllProductController extends AbstractController {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        SearchForm searchForm = createSeachForm(req);
+        SearchForm searchForm = createSearchForm(req);
         System.out.println("Сработал контролер products");
         List<Product> products = getProductService().listAllProduct(1, Constants.MAX_PRODUCTS_PER_HTML_PAGE);
         req.setAttribute("products", products);

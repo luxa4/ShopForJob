@@ -23,7 +23,7 @@ public class SearchResultMoreController extends AbstractController {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        SearchForm searchForm = createSeachForm(req);
+        SearchForm searchForm = createSearchForm(req);
         List<Product> products = getProductService().ListProductBySearchForm(searchForm, getPage(req), Constants.MAX_PRODUCTS_PER_HTML_PAGE);
         req.setAttribute("products", products);
         RoutingUtil.forwardToFragment("product-list.jsp", req, resp);

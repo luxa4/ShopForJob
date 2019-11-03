@@ -1,5 +1,6 @@
 package ru.belyaev.shop.servlet;
 
+import ru.belyaev.shop.form.ProductForm;
 import ru.belyaev.shop.form.SearchForm;
 import ru.belyaev.shop.service.OrderService;
 import ru.belyaev.shop.service.ProductService;
@@ -34,8 +35,11 @@ public class AbstractController extends HttpServlet {
         return orderService;
     }
 
-    public final SearchForm createSeachForm(HttpServletRequest req){
-        return new SearchForm(req.getParameter("query"),req.getParameterValues("category"),req.getParameterValues("producer"));
+    public final SearchForm createSearchForm(HttpServletRequest req){
+        return new SearchForm(
+                req.getParameter("query"),
+                req.getParameterValues("category"),
+                req.getParameterValues("producer"));
     }
 
     public static int pageCount (int countProduct, int limit) {
@@ -53,6 +57,14 @@ public class AbstractController extends HttpServlet {
         } catch (NumberFormatException e) {
             return 1;
         }
+    }
+
+    public final ProductForm createProductForm(HttpServletRequest req){
+        return new ProductForm(
+                Integer.parseInt(req.getParameter("idProduct")),
+                Integer.parseInt(req.getParameter("count"))
+        );
+
     }
 
 

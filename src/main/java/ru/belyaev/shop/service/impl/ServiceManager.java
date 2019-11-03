@@ -50,7 +50,7 @@ public class ServiceManager {
         loadApplicationProperties();
         dataSource = createDataSource();
         productService = new ProductServiceImpl(dataSource);
-        orderService = new OrderServiceImpl();
+        orderService = new OrderServiceImpl(dataSource);
     }
     private BasicDataSource createDataSource(){
         BasicDataSource dataSource = new BasicDataSource();

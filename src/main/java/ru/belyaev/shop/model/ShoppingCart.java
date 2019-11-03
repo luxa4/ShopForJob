@@ -1,9 +1,11 @@
 package ru.belyaev.shop.model;
 
 import ru.belyaev.shop.Constants;
+import ru.belyaev.shop.entity.Product;
 import ru.belyaev.shop.exception.ValidationException;
 
 
+import java.math.BigDecimal;
 import java.util.Collection;
 
 import java.util.HashMap;
@@ -11,19 +13,25 @@ import java.util.Map;
 
 public class ShoppingCart {
     private int totalCount=0;
+    private BigDecimal totalCost = BigDecimal.ZERO;
     Map<Integer,ShoppingCartItem> products = new HashMap<Integer,ShoppingCartItem>();
 
-    public void addProduct(int idProduct, int count) {
+    public void addProduct(Product product, int count) {
         validateShoppingCartSize();
-        ShoppingCartItem shoppingCartItem = products.get(idProduct);
+        ShoppingCartItem shoppingCartItem = products.get(product.getId());
         if (shoppingCartItem == null) {
-            shoppingCartItem = new ShoppingCartItem(idProduct, count);
-            products.put(idProduct, shoppingCartItem);
+            shoppingCartItem = new ShoppingCartItem(product, count);
+            products.put(product.getId(), shoppingCartItem);
         } else {
             validateProductCount(count + shoppingCartItem.getCount());
             shoppingCartItem.setCount(count+shoppingCartItem.getCount());
         }
 
+    }
+
+
+    public BigDecimal getTotalCost() {
+        return totalCost;
     }
 
     public void removeProduct (int idProduct, int count) {
@@ -43,9 +51,12 @@ public class ShoppingCart {
     }
 
     public void refreshStatistic() {
-            totalCount = 0 ;
+        totalCount = 0;
+        totalCost = BigDecimal.ZERO;
+
             for (ShoppingCartItem shoppingCartItem: products.values()) {
                 totalCount += shoppingCartItem.getCount();
+                totalCost = totalCost.add(shoppingCartItem.getProduct().getPrice().multiply(BigDecimal.valueOf(shoppingCartItem.getCount())));
             }
     }
 
@@ -63,5 +74,14 @@ public class ShoppingCart {
 
     public int getTotalCount() {
         return totalCount;
+    }
+
+    @Override
+    public String toString() {
+        return "ShoppingCart{" +
+                "totalCount=" + totalCount +
+                ", totalCost=" + totalCost +
+                ", products=" + products +
+                '}';
     }
 }

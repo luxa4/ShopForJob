@@ -23,7 +23,7 @@ public class SearchController extends AbstractController {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        SearchForm searchForm = createSeachForm(req);
+        SearchForm searchForm = createSearchForm(req);
         int countProduct = getProductService().countProductBySearchFrom(searchForm);
         List<Product> products = getProductService().ListProductBySearchForm(searchForm, 1, Constants.MAX_PRODUCTS_PER_HTML_PAGE);
         req.setAttribute("pageCount", pageCount(countProduct,Constants.MAX_PRODUCTS_PER_HTML_PAGE));
