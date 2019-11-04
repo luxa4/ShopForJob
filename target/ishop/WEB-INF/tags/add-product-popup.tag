@@ -1,4 +1,4 @@
-<%@ tag pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
+<%@ tag pageEncoding="UTF-8" trimDirectiveWhitespaces="true" isELIgnored="false" %>
 
 <div id="addProductPopup" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog">

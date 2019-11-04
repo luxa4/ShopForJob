@@ -26,6 +26,7 @@ public class ShoppingCart {
             validateProductCount(count + shoppingCartItem.getCount());
             shoppingCartItem.setCount(count+shoppingCartItem.getCount());
         }
+        refreshStatistic();
 
     }
 

@@ -31,7 +31,7 @@ public class AddProductController extends AbstractController {
         JSONObject r = new JSONObject();
         r.put("totalCount", shoppingCart.getTotalCount());
         r.put("totalCost", shoppingCart.getTotalCost());
-        RoutingUtil.sendJSON(r,req, resp);
+        RoutingUtil.sendJSON(r , req, resp);
 
     }
 }

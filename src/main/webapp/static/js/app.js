@@ -10,7 +10,9 @@
 	};
 
 	var showAddProductPopup = function (){
+
 		var idProduct = $(this).attr('data-id-product');
+
 		var product = $('#product'+idProduct);
 		$('#addProductPopup').attr('data-id-product', idProduct);
 		$('#addProductPopup .product-image').attr('src', product.find('.thumbnail img').attr('src'));
@@ -46,12 +48,19 @@
 			},
 			success: function(data){
 				$('#currentShoppingCart .total-count').text(data.totalCount);
-					$('#currentShoppingCart .total-cost').text(data.totalCost);
-					$('#currentShoppingCart').removeClass('hidden');
-					$('#addProductPopup').modal('hide');
+				$('#currentShoppingCart .total-cost').text(data.totalCost);
+				$('#currentShoppingCart').removeClass('hidden');
+				$('#addProductPopup').modal('hide');
+				convertLoaderToButton(btn, 'btn-primary', addProductToCart);
+
+
+
+
+
+
 			},
 			error: function(data) {
-				convertButtonToLoader(btn, 'btn-primary', addProductToCart());
+				convertLoaderToButton(btn, 'btn-primary', addProductToCart);
 				alert('Error');
 			}
 
@@ -86,8 +95,8 @@
 		btn.removeClass('load-indicator');
 		btn.addClass('btn');
 		btn.addClass(btnClass);
-		btn.text(btn.attr('data-btn-text'));
-		btn.removeAttr('data-btn-text');
+		btn.text(btn.attr('data-btn-text')); // Достаем из атрибута наш текст - Add to Cart -
+		btn.removeAttr('data-btn-text'); // удаляем атрибут
 		btn.click(actionClick); // срабатывает функция actionClick при клике
 	};
 	

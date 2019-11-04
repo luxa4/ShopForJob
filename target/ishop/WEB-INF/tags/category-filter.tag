@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <%@ attribute name="categories" required="true" type="java.util.Collection" %>
 <%@ attribute name="searchForm" required="true" type="ru.belyaev.shop.form.SearchForm" %>
 

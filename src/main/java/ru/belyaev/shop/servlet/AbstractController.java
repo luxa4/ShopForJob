@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-public class AbstractController extends HttpServlet {
+public abstract class AbstractController extends HttpServlet {
 
     private ProductService productService;
     private OrderService orderService;
