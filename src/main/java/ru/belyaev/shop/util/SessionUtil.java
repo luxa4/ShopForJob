@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import ru.belyaev.shop.Constants;
+import ru.belyaev.shop.model.CurrentAccount;
 import ru.belyaev.shop.model.ShoppingCart;
 
 
@@ -39,7 +40,24 @@ public class SessionUtil {
 	public static void updateCurrentShoppingCartCookie(String cookieValue, HttpServletResponse resp) {
 		WebUtils.setCookie(Constants.Cookie.SHOPPING_CART.getName(), cookieValue,
 				Constants.Cookie.SHOPPING_CART.getTtl(), resp);
+
 	}
+
+	public static CurrentAccount getCurrentAccount(HttpServletRequest req) {
+		return (CurrentAccount) req.getSession().getAttribute(Constants.CURRENT_ACCOUNT);
+    }
+
+    public static void setCurrenAccount(HttpServletRequest req, CurrentAccount currentAccount) {
+		req.getSession().setAttribute(Constants.CURRENT_ACCOUNT, currentAccount);
+    }
+
+    public static boolean isCurrentAccountCreated(HttpServletRequest req) {
+		if (req.getAttribute(Constants.CURRENT_ACCOUNT) != null) {
+			return true;
+		} else {
+			return false;
+		}
+    }
 
 	private SessionUtil() {
 	}

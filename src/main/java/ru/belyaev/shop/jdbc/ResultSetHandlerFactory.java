@@ -4,9 +4,7 @@
 
 package ru.belyaev.shop.jdbc;
 
-import ru.belyaev.shop.entity.Category;
-import ru.belyaev.shop.entity.Producer;
-import ru.belyaev.shop.entity.Product;
+import ru.belyaev.shop.entity.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,8 +13,11 @@ import java.util.List;
 
 public class ResultSetHandlerFactory  {
 
+    // БЕРЕМ информацию из базы и создаем Объекты (сущности)
+
+
     // создани объекта типа конструктора
-    public static ResultSetHandler<Product> RESULT_SET_HANDLER_PODUCT = new ResultSetHandler<Product>() {
+    public static ResultSetHandler<Product> RESULT_SET_HANDLER_PRODUCT = new ResultSetHandler<Product>() {
         @Override
         public Product handle(ResultSet rs) throws SQLException {
             Product p = new Product();
@@ -51,6 +52,37 @@ public class ResultSetHandlerFactory  {
             pr.setId(rs.getInt("id"));
             pr.setProductCount(rs.getInt("product_count"));
             return pr;
+        }
+    };
+
+    public static ResultSetHandler<Account> RESULT_SET_HANDLER_ACCOUNT = new ResultSetHandler<Account>() {
+        @Override
+        public Account handle(ResultSet rs) throws SQLException {
+            Account account = new Account();
+            account.setId(rs.getInt("id"));
+            account.setName(rs.getString("name"));
+            account.setEmail(rs.getString("email"));
+            return account;
+        }
+    };
+
+    public static ResultSetHandler<Order> RESULT_SET_HANDLER_ORDER = new ResultSetHandler<Order>() {
+        @Override
+        public Order handle(ResultSet rs) throws SQLException {
+            Order order = new Order();
+            order.setCreated(rs.getTimestamp("created"));
+            order.setIdAccount(rs.getInt("id_account"));
+            order.setId(rs.getLong("id"));
+            return order;
+        }
+    };
+
+    public static ResultSetHandler<OrderItem> RESULT_SET_HANDLER_ORDER_ITEM = new ResultSetHandler<OrderItem>() {
+        @Override
+        public OrderItem handle(ResultSet rs) throws SQLException {
+            OrderItem orderItem = new OrderItem();
+
+            return orderItem;
         }
     };
 

@@ -6,6 +6,7 @@ package ru.belyaev.shop.servlet.page;
 
 import ru.belyaev.shop.servlet.AbstractController;
 import ru.belyaev.shop.util.RoutingUtil;
+import ru.belyaev.shop.util.SessionUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,8 +17,16 @@ import java.io.IOException;
 @WebServlet("/shopping-cart")
 public class ShowShoppingCartController extends AbstractController {
 
+    private static final long serialVersionUID = 2057475736109395575L;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RoutingUtil.forwardToPage("shopping-cart.jsp",req,resp);
+
+        // Verify if SoppingCart is null, we redirect to /products
+        if (SessionUtil.isCurrentShoppingCartCreated(req)) {
+            RoutingUtil.forwardToPage("shopping-cart.jsp", req, resp);
+        } else {
+            RoutingUtil.redirect("/products", req, resp);
+        }
     }
 }

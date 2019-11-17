@@ -4,7 +4,9 @@
 
 package ru.belyaev.shop.entity;
 
-public class Account extends AbstractEntity<Integer> {
+import ru.belyaev.shop.model.CurrentAccount;
+
+public class Account extends AbstractEntity<Integer> implements CurrentAccount {
     private String name;
     private String email;
 
@@ -31,5 +33,21 @@ public class Account extends AbstractEntity<Integer> {
                 ", email='" + email + '\'' +
                 ", id=" + id +
                 '}';
+    }
+
+    @Override
+    public String getDescription() {
+        return name + " (" + email + ") ";
+    }
+
+    public Account(String name, String email) {
+        super();
+        this.name = name;
+        this.email = email;
+    }
+
+
+    public Account() {
+        super();
     }
 }

@@ -7,7 +7,18 @@
 		initSearchForm();
 		$('#goSearch').click(goSearch);
 		$('.remove-product').click(removeProductFromCart);
+		$('.post-request').click(function(){
+			postRequest($(this).attr('data-url'));
+		});
 	};
+
+	// добавление формы в html код при нажании на кнопку "Sign-in" and "Make order"
+	var postRequest = function(url){
+		var form = '<form id="postRequestForm" action="'+url+'" method="post"></form>';
+		$('body').append(form);
+		$('#postRequestForm').submit();
+	};
+
 
 	var showAddProductPopup = function (){
 

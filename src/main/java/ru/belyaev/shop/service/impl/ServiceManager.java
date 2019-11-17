@@ -2,8 +2,10 @@ package ru.belyaev.shop.service.impl;
 
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import ru.belyaev.shop.model.SocialAccount;
 import ru.belyaev.shop.service.OrderService;
 import ru.belyaev.shop.service.ProductService;
+import ru.belyaev.shop.service.SocialService;
 
 import javax.servlet.ServletContext;
 
@@ -23,35 +25,44 @@ public class ServiceManager {
         return instance;
     }
 
+    public SocialService getSocialService() {
+        return socialService;
+    }
     public ProductService getProductService() {
         return productService;
     }
     public OrderService getOrderService() {
         return orderService;
     }
+
     public String getApplicationProperty(String key) {
         return applicationProperties.getProperty(key);
     }
-    public void close()  {
 
+    public void close()  {
         try {
             dataSource.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
     private Properties applicationProperties = new Properties();
     private BasicDataSource dataSource;
     private final ProductService productService;
     private final OrderService orderService;
+    private final SocialService socialService;
+
+
+
     private ServiceManager(ServletContext context) {
         loadApplicationProperties();
         dataSource = createDataSource();
         productService = new ProductServiceImpl(dataSource);
         orderService = new OrderServiceImpl(dataSource);
-    }
+        socialService = new FacebookSocialService(this);
+     }
+
     private BasicDataSource createDataSource(){
         BasicDataSource dataSource = new BasicDataSource();
         dataSource.setDefaultAutoCommit(false);
@@ -67,11 +78,8 @@ public class ServiceManager {
 
     private void loadApplicationProperties() {
         try (InputStream in = ServiceManager.class.getClassLoader().getResourceAsStream("application.properties")) {
-            System.out.println("Загружены ApplicationProperties");
             applicationProperties.load(in);
-
         } catch (IOException e) {
-            System.out.println("Не загрузились ApplicationProperties");
             throw new RuntimeException(e);
         }
     }

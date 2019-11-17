@@ -4,6 +4,7 @@ import ru.belyaev.shop.form.ProductForm;
 import ru.belyaev.shop.form.SearchForm;
 import ru.belyaev.shop.service.OrderService;
 import ru.belyaev.shop.service.ProductService;
+import ru.belyaev.shop.service.SocialService;
 import ru.belyaev.shop.service.impl.ServiceManager;
 
 
@@ -15,24 +16,25 @@ public abstract class AbstractController extends HttpServlet {
 
     private ProductService productService;
     private OrderService orderService;
+    private SocialService socialService;
 
 
     @Override
     public void init()  {
-
-            System.out.println("Зашли в init AbstractController");
             productService = ServiceManager.getInstance(getServletContext()).getProductService();
-
             orderService = ServiceManager.getInstance(getServletContext()).getOrderService();
-
+            socialService = ServiceManager.getInstance(getServletContext()).getSocialService();
     }
 
     public ProductService getProductService() {
         return productService;
     }
-
     public OrderService getOrderService() {
         return orderService;
+    }
+
+    public SocialService getSocialService() {
+        return socialService;
     }
 
     public final SearchForm createSearchForm(HttpServletRequest req){

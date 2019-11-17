@@ -10,6 +10,17 @@
     </session-config>
 
     <filter-mapping>
+        <filter-name>CheckAuthenticationFilter</filter-name>
+        <url-pattern>/my-order</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>SetCurrentRequestUrlFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
+    <filter-mapping>
         <filter-name>ErrorHandlerFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>

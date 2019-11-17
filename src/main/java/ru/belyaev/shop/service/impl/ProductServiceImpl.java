@@ -24,7 +24,7 @@ import javax.sql.DataSource;
 
 class ProductServiceImpl implements ProductService {
     private static final ResultSetHandler<List<Product>> productsResultSetHandler =
-            ResultSetHandlerFactory.getListResultSetHandler(ResultSetHandlerFactory.RESULT_SET_HANDLER_PODUCT);
+            ResultSetHandlerFactory.getListResultSetHandler(ResultSetHandlerFactory.RESULT_SET_HANDLER_PRODUCT);
 
     private final DataSource dataSource;
 
