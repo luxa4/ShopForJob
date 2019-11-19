@@ -19,7 +19,9 @@ public class MyOrdersController extends AbstractController {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=UTF-8");
-        resp.getWriter().println("Вы на странице My-orders через метод GET");
+        resp.getWriter().println("Вы на странице через метод My-orders ");
+
+
     }
 
     @Override

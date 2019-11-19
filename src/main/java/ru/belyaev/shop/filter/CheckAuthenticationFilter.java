@@ -24,6 +24,7 @@ public class CheckAuthenticationFilter extends AbstractFilter {
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         if (SessionUtil.isCurrentAccountCreated(request)) {
+
             chain.doFilter(request,response);
         } else {
             String requestURI = request.getRequestURI();
