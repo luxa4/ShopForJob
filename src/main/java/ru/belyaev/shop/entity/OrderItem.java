@@ -4,10 +4,17 @@
 
 package ru.belyaev.shop.entity;
 
+
+import ru.belyaev.framework.annotationJDBC.Child;
+import ru.belyaev.framework.annotationJDBC.Column;
+
 public class OrderItem extends AbstractEntity<Long> {
+    @Column("id_order")
     private Integer idOrder;
-    private Integer idProduct;
-    private Integer idAccoutn;
+    @Child(ColumnName = "id_product")
+    private Product product;
+    @Column("id_account")
+    private Integer idAccount;
     private Integer count;
 
     public Integer getIdOrder() {
@@ -18,20 +25,20 @@ public class OrderItem extends AbstractEntity<Long> {
         this.idOrder = idOrder;
     }
 
-    public Integer getIdProduct() {
-        return idProduct;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setIdProduct(Integer idProduct) {
-        this.idProduct = idProduct;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public Integer getIdAccoutn() {
-        return idAccoutn;
+        return idAccount;
     }
 
     public void setIdAccoutn(Integer idAccoutn) {
-        this.idAccoutn = idAccoutn;
+        this.idAccount = idAccount;
     }
 
     public Integer getCount() {
@@ -46,8 +53,9 @@ public class OrderItem extends AbstractEntity<Long> {
     public String toString() {
         return "OrderItem{" +
                 "idOrder=" + idOrder +
-                ", idProduct=" + idProduct +
-                ", idAccoutn=" + idAccoutn +
+
+                ", product=" + product +
+                ", idAccount=" + idAccount +
                 ", count=" + count +
                 ", id=" + id +
                 '}';

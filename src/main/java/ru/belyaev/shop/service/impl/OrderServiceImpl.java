@@ -1,5 +1,7 @@
 package ru.belyaev.shop.service.impl;
 
+import ru.belyaev.framework.annotation.Transactional;
+import ru.belyaev.framework.factory.JDBCConnectionUtils;
 import ru.belyaev.shop.entity.Account;
 import ru.belyaev.shop.entity.Order;
 import ru.belyaev.shop.entity.Product;
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Transactional
 class OrderServiceImpl implements OrderService {
 
     private static final ResultSetHandler<Product> productsResultSetHandler =
@@ -37,7 +40,7 @@ class OrderServiceImpl implements OrderService {
     @Override
     public void addProductToShoppingCart(ProductForm productForm, ShoppingCart shoppingCart) {
         try (Connection c = dataSource.getConnection()) {
-            Product product =  JDBCUtil.select(c, "SELECT p.*, c.name as category, pr.name as producer FROM product p, producer pr, category c "
+            Product product =  JDBCUtil.select(JDBCConnectionUtils.getConnection(), "SELECT p.*, c.name as category, pr.name as producer FROM product p, producer pr, category c "
                     + "WHERE c.id=p.id_category and pr.id=p.id_producer and p.id=?", productsResultSetHandler, productForm.getIdProduct());
         if(product == null)
             throw new InternalServerErrorException("Product is not found in DataBase: id: " + productForm.getIdProduct());
@@ -58,10 +61,10 @@ class OrderServiceImpl implements OrderService {
             System.out.println( new Timestamp(System.currentTimeMillis()));
             System.out.println(currentAccount.getId());
             System.out.println( new Timestamp(System.currentTimeMillis()));
-            Order order = JDBCUtil.insert(c, "INSERT INTO \"order\" VALUES (nextval('order_seq'),?,?)",
+            Order order = JDBCUtil.insert(JDBCConnectionUtils.getConnection(), "INSERT INTO \"order\" VALUES (nextval('order_seq'),?,?)",
                     ResultSetHandlerFactory.getSingleResultSethandler(ResultSetHandlerFactory.RESULT_SET_HANDLER_ORDER) , currentAccount.getId(), new Timestamp(System.currentTimeMillis()));
             // добалвение в базу элементов, созданного заказ
-            JDBCUtil.insertBatch(c, "INSERT INTO order_item VALUES (nextval('order_item_seq'),?,?,?) ", toOrderItemParameterList(order.getId(),shoppingCart.getItems()));
+            JDBCUtil.insertBatch(JDBCConnectionUtils.getConnection(), "INSERT INTO order_item VALUES (nextval('order_item_seq'),?,?,?) ", toOrderItemParameterList(order.getId(),shoppingCart.getItems()));
             c.commit();
             return order.getId();
         } catch (SQLException e) {
@@ -82,7 +85,7 @@ class OrderServiceImpl implements OrderService {
     @Override
     public CurrentAccount authenticate(SocialAccount socialAccount) {
         try (Connection c = dataSource.getConnection()) {
-            Account account = JDBCUtil.select(c, "SELECT * FROM account WHERE email=?",
+            Account account = JDBCUtil.select(JDBCConnectionUtils.getConnection(), "SELECT * FROM account WHERE email=?",
                     ResultSetHandlerFactory.getSingleResultSethandler(ResultSetHandlerFactory.RESULT_SET_HANDLER_ACCOUNT), socialAccount.getEmail());
             if (account == null) {
                 account = new Account(socialAccount.getName(), socialAccount.getEmail());

@@ -4,11 +4,15 @@
 
 package ru.belyaev.shop.entity;
 
+
+import ru.belyaev.framework.annotationJDBC.Column;
+
 import java.math.BigDecimal;
 
 public class Product extends AbstractEntity<Integer> {
     private String name;
     private String description;
+    @Column("image_link")
     private String imageLink;
     private BigDecimal price;
     private String category;

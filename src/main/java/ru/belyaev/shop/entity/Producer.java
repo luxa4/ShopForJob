@@ -4,9 +4,13 @@
 
 package ru.belyaev.shop.entity;
 
+
+import ru.belyaev.framework.annotationJDBC.Column;
+
 public class Producer extends AbstractEntity<Integer> {
     private String name;
-    private int productCount;
+    @Column("product_count")
+    private Integer productCount;
 
     public String getName() {
         return name;
@@ -16,11 +20,11 @@ public class Producer extends AbstractEntity<Integer> {
         this.name = name;
     }
 
-    public int getProductCount() {
+    public Integer getProductCount() {
         return productCount;
     }
 
-    public void setProductCount(int productCount) {
+    public void setProductCount(Integer productCount) {
         this.productCount = productCount;
     }
 

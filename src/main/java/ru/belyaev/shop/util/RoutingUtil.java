@@ -16,7 +16,7 @@ public final class RoutingUtil {
 	}
 
 	public static void forwardToPage(String jspPage, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.setAttribute("CURRENT_PAGE", "page/" + jspPage);
+		req.setAttribute("CURRENT_PAGE", "/WEB-INF/JSP/page/" + jspPage);
 		req.getRequestDispatcher("/WEB-INF/JSP/page-template.jsp").forward(req, resp);
 	}
 
@@ -32,6 +32,7 @@ public final class RoutingUtil {
 
 	public static void sendJSON (JSONObject json, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");
+
         resp.getWriter().println(json.toString());
         resp.getWriter().close();
 	}

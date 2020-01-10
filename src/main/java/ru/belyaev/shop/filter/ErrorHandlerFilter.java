@@ -36,7 +36,7 @@ public class ErrorHandlerFilter extends AbstractFilter {
 				LOGGER.error("Request " + requestUrl + " failed: " + th.getMessage(), th);
 			}
 
-			handleException( requestUrl, th, req, resp);
+			handleException(requestUrl, th, req, resp);
 
 		}
 	}
@@ -54,28 +54,31 @@ public class ErrorHandlerFilter extends AbstractFilter {
 		int statusCode = getStatusCode(th);
 		resp.setStatus(statusCode);
 
-		if (UrlUtils.isAjaxJsonUrl(requestUrl)) {
-			JSONObject json = new JSONObject();
-			json.put("message", th instanceof ValidationException ? th.getMessage() : INTERNAL_ERROR);
-			RoutingUtil.sendJSON(json, req, resp);
-		} else if (UrlUtils.isAjaxHtmlUrl(requestUrl)) {
-			RoutingUtil.sendHTMLFragment(INTERNAL_ERROR, req,resp);
-		} else {
+//		if (UrlUtils.isAjaxJsonUrl(requestUrl)) {
+//			JSONObject json = new JSONObject();
+//			json.put("message", th instanceof ValidationException ? th.getMessage() : INTERNAL_ERROR);
+//			RoutingUtil.sendJSON(json, req, resp);
+//		} else if (UrlUtils.isAjaxHtmlUrl(requestUrl)) {
+//			RoutingUtil.sendHTMLFragment(INTERNAL_ERROR, req,resp);
+//		} else {
 			req.setAttribute("statusCode", statusCode);
 			RoutingUtil.forwardToPage("error.jsp", req, resp);
-		}
+//		}
 	}
 
 
 //	Для отображения своего вида стандартных ошибок создаем класс
 	private static class ThrowExceptionInsteadInSendErrorResponse extends HttpServletResponseWrapper {
-	public ThrowExceptionInsteadInSendErrorResponse(HttpServletResponse response) {
+
+		public ThrowExceptionInsteadInSendErrorResponse(HttpServletResponse response) {
 		super(response);
-	}
+		}
+
+	// переопределяем методы ответа сервера
 
 	@Override
 	public void sendError(int sc) throws IOException {
-		sendError(sc, INTERNAL_ERROR);
+		sendError(sc, INTERNAL_ERROR); // вызывает метод ниже. Второй парамет только для метода - default -
 	}
 
 	@Override

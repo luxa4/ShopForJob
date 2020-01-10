@@ -33,6 +33,7 @@ public abstract class AbstractFilter implements Filter {
 		} else {
 			doFilter(req, resp, chain);
 		}
+//		resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 	}
 	
 	public abstract void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException;

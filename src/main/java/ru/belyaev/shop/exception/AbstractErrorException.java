@@ -4,10 +4,10 @@
 
 package ru.belyaev.shop.exception;
 
-public class AbstractErrorException extends IllegalArgumentException {
+public abstract class AbstractErrorException extends IllegalArgumentException {
     private static final long serialVersionUID = 4743106813489511875L;
 
-    private final int code;
+    private  int code;
 
     public AbstractErrorException(String s, int code) {
         super(s);

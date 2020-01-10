@@ -14,10 +14,10 @@ public class ResourceNotFoundException extends AbstractErrorException {
     }
 
     public ResourceNotFoundException(String message, Throwable cause) {
-        super(message, cause,  HttpServletResponse.SC_NOT_FOUND);
+        super(message, cause, HttpServletResponse.SC_NOT_FOUND);
     }
 
     public ResourceNotFoundException(Throwable cause) {
-        super(cause,  HttpServletResponse.SC_NOT_FOUND);
+        super(cause, HttpServletResponse.SC_NOT_FOUND);
     }
 }

@@ -4,13 +4,20 @@
 
 package ru.belyaev.shop.entity;
 
+
+import ru.belyaev.framework.annotationJDBC.Column;
+import ru.belyaev.framework.annotationJDBC.Transient;
+
 import java.sql.Timestamp;
 import java.util.List;
 
 public class Order extends AbstractEntity<Long> {
+    @Column("id_account")
     private Integer idAccount;
+    @Transient
     private List<OrderItem> products;
     private Timestamp created;
+    @Transient
     private int totalCount;
 
     public int getTotalCount(List<OrderItem> products) {

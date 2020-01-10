@@ -16,7 +16,7 @@ public class ResultSetHandlerFactory  {
     // БЕРЕМ информацию из базы и создаем Объекты (сущности)
 
 
-    // создани объекта типа конструктора
+    // создание Экземпляра объекта типа конструктора
     public static ResultSetHandler<Product> RESULT_SET_HANDLER_PRODUCT = new ResultSetHandler<Product>() {
         @Override
         public Product handle(ResultSet rs) throws SQLException {
@@ -81,7 +81,11 @@ public class ResultSetHandlerFactory  {
         @Override
         public OrderItem handle(ResultSet rs) throws SQLException {
             OrderItem orderItem = new OrderItem();
-
+            orderItem.setCount(rs.getInt("count"));
+            orderItem.setIdAccoutn(rs.getInt("id_account"));
+            orderItem.setProduct(RESULT_SET_HANDLER_PRODUCT.handle(rs));
+            orderItem.setId(rs.getLong("id"));
+            orderItem.setIdOrder(rs.getInt("id_order"));
             return orderItem;
         }
     };

@@ -1,7 +1,7 @@
 package ru.belyaev.shop.service.impl;
 
 
-import org.apache.commons.dbcp2.BasicDataSource;
+
 import ru.belyaev.shop.entity.Category;
 import ru.belyaev.shop.entity.Producer;
 import ru.belyaev.shop.entity.Product;
@@ -21,6 +21,7 @@ import java.util.concurrent.Callable;
 
 
 import javax.sql.DataSource;
+
 
 class ProductServiceImpl implements ProductService {
     private static final ResultSetHandler<List<Product>> productsResultSetHandler =

@@ -4,9 +4,13 @@
 
 package ru.belyaev.shop.entity;
 
+
+import ru.belyaev.framework.annotationJDBC.Column;
+
 public class Category extends AbstractEntity<Integer> {
     private String name;
     private String url;
+    @Column("product_count")
     private int productCount;
 
 
