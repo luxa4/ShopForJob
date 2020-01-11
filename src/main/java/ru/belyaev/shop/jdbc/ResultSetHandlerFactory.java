@@ -81,11 +81,11 @@ public class ResultSetHandlerFactory  {
         @Override
         public OrderItem handle(ResultSet rs) throws SQLException {
             OrderItem orderItem = new OrderItem();
+            orderItem.setId(rs.getLong("oid"));
             orderItem.setCount(rs.getInt("count"));
-            orderItem.setIdAccoutn(rs.getInt("id_account"));
-            orderItem.setProduct(RESULT_SET_HANDLER_PRODUCT.handle(rs));
-            orderItem.setId(rs.getLong("id"));
-            orderItem.setIdOrder(rs.getInt("id_order"));
+            orderItem.setIdOrder(rs.getLong("id_order"));
+            Product p = RESULT_SET_HANDLER_PRODUCT.handle(rs);
+            orderItem.setProduct(p);
             return orderItem;
         }
     };

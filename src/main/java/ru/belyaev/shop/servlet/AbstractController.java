@@ -2,14 +2,17 @@ package ru.belyaev.shop.servlet;
 
 import ru.belyaev.shop.form.ProductForm;
 import ru.belyaev.shop.form.SearchForm;
+import ru.belyaev.shop.model.ShoppingCart;
 import ru.belyaev.shop.service.OrderService;
 import ru.belyaev.shop.service.ProductService;
 import ru.belyaev.shop.service.SocialService;
 import ru.belyaev.shop.service.impl.ServiceManager;
 
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public abstract class AbstractController extends HttpServlet {
@@ -68,6 +71,7 @@ public abstract class AbstractController extends HttpServlet {
         );
 
     }
+
 
 
 }

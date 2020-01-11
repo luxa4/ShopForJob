@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/ajax/html/search")
+@WebServlet("/ajax/html/more/search")
 public class SearchResultMoreController extends AbstractController {
     private static final long serialVersionUID = 6725071099705912476L;
 

@@ -55,10 +55,10 @@ public class SearchForm {
     }
 
     public boolean isCategoriesNotEmpty(){
-        return categories.isEmpty();
+        return !categories.isEmpty();
     }
     public boolean isProducersNotEmpty(){
-        return producers.isEmpty();
+        return !producers.isEmpty();
 
     }
 

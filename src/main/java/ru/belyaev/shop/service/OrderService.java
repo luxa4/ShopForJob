@@ -6,12 +6,14 @@ import ru.belyaev.shop.model.CurrentAccount;
 import ru.belyaev.shop.model.ShoppingCart;
 import ru.belyaev.shop.model.SocialAccount;
 
+import java.util.List;
+
 public interface OrderService {
 
 
     void addProductToShoppingCart(ProductForm productForm, ShoppingCart shoppingCart);
 
-//    void removeProductFromShoppingCart(ProductForm productForm, ShoppingCart shoppingCart);
+    void removeProductFromShoppingCart(ProductForm productForm, ShoppingCart shoppingCart);
 
     CurrentAccount authenticate(SocialAccount socialAccount);
 
@@ -19,5 +21,9 @@ public interface OrderService {
 
     Order findOrderById(Long id, CurrentAccount currentAccount);
 
+    List<Order> listMyOrders(CurrentAccount currentAccount, int page, int limit);
 
+    int countMyOrders(CurrentAccount currentAccount);
+
+    String serializeShoppingCart(ShoppingCart shoppingCart);
 }

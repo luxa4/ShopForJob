@@ -8,6 +8,7 @@ package ru.belyaev.shop.entity;
 import ru.belyaev.framework.annotationJDBC.Column;
 import ru.belyaev.framework.annotationJDBC.Transient;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -44,8 +45,12 @@ public class Order extends AbstractEntity<Long> {
         return products;
     }
 
+
+
     public void setProducts(List<OrderItem> products) {
+
         this.products = products;
+
     }
 
     public Timestamp getCreated() {
@@ -54,6 +59,16 @@ public class Order extends AbstractEntity<Long> {
 
     public void setCreated(Timestamp created) {
         this.created = created;
+    }
+
+    public BigDecimal getTotalCost() {
+        BigDecimal cost = BigDecimal.ZERO;
+        if (products != null) {
+            for (OrderItem item : products) {
+                cost = cost.add(item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getCount())));
+            }
+        }
+        return cost;
     }
 
     @Override
