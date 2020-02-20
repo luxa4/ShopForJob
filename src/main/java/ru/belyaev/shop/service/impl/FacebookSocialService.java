@@ -11,20 +11,24 @@ import com.restfb.Version;
 import com.restfb.scope.FacebookPermissions;
 import com.restfb.scope.ScopeBuilder;
 import com.restfb.types.User;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import ru.belyaev.shop.model.SocialAccount;
 import ru.belyaev.shop.service.SocialService;
 
+@Service
 public class FacebookSocialService implements SocialService {
-    private final String idClient;
-    private final String secret;
-    private final String redirectUrl;
+
+    @Value("${social.facebook.idClient}")
+    private String idClient;
+
+    @Value("${social.facebook.secret}")
+    private String secret;
+
+    @Value("${app.host}" + "/from-social")
+    private String redirectUrl;
 
 
-    public FacebookSocialService(ServiceManager serviceManager) {
-        idClient = serviceManager.getApplicationProperty("social.facebook.idClient");
-        secret = serviceManager.getApplicationProperty("social.facebook.secret");
-        redirectUrl = serviceManager.getApplicationProperty("app.host") + "/from-social";
-    }
 
     @Override
     public String getAuthorizeUrl() {

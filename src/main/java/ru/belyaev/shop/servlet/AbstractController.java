@@ -1,5 +1,7 @@
 package ru.belyaev.shop.servlet;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import ru.belyaev.shop.form.ProductForm;
 import ru.belyaev.shop.form.SearchForm;
 import ru.belyaev.shop.model.ShoppingCart;
@@ -15,30 +17,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public abstract class AbstractController extends HttpServlet {
 
-    private ProductService productService;
-    private OrderService orderService;
-    private SocialService socialService;
+public abstract class AbstractController {
 
+    @Autowired
+    public ProductService productService;
+    @Autowired
+    public OrderService orderService;
+    @Autowired
+    public SocialService socialService;
 
-    @Override
-    public void init()  {
-            productService = ServiceManager.getInstance(getServletContext()).getProductService();
-            orderService = ServiceManager.getInstance(getServletContext()).getOrderService();
-            socialService = ServiceManager.getInstance(getServletContext()).getSocialService();
-    }
-
-    public ProductService getProductService() {
-        return productService;
-    }
-    public OrderService getOrderService() {
-        return orderService;
-    }
-
-    public SocialService getSocialService() {
-        return socialService;
-    }
 
     public final SearchForm createSearchForm(HttpServletRequest req){
         return new SearchForm(

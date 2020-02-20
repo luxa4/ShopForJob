@@ -5,6 +5,9 @@
 package ru.belyaev.shop.servlet.page;
 
 
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import ru.belyaev.shop.Constants;
 import ru.belyaev.shop.entity.Order;
 import ru.belyaev.shop.model.CurrentAccount;
@@ -19,11 +22,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/my-orders")
+@Controller
 public class MyOrdersController extends AbstractController {
     private static final long serialVersionUID = -3940675839945296526L;
 
-    @Override
+    @RequestMapping(value = "/my-orders", method = RequestMethod.GET)
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         CurrentAccount currentAccount = SessionUtil.getCurrentAccount(req);
         List<Order> orders = getOrderService().listMyOrders(currentAccount, 1, Constants.ORDERS_PER_PAGE);
@@ -33,3 +36,4 @@ public class MyOrdersController extends AbstractController {
         RoutingUtil.forwardToPage("my-orders.jsp", req, resp);
     }
 }
+

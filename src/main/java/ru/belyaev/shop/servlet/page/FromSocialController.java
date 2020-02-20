@@ -5,6 +5,9 @@
 package ru.belyaev.shop.servlet.page;
 
 import org.apache.tomcat.util.bcel.Const;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import ru.belyaev.shop.Constants;
 import ru.belyaev.shop.model.CurrentAccount;
 import ru.belyaev.shop.model.SocialAccount;
@@ -19,11 +22,11 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
-@WebServlet("/from-social")
+@Controller
 public class FromSocialController extends AbstractController {
     private static final long serialVersionUID = -2818067285503260741L;
 
-    @Override
+    @RequestMapping(value = "/from-social", method = RequestMethod.GET)
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String code = req.getParameter("code");
         if (code != null) {

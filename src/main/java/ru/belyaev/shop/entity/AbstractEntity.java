@@ -4,9 +4,11 @@
 
 package ru.belyaev.shop.entity;
 
+import javax.persistence.Column;
 import java.util.Objects;
 
 public abstract class AbstractEntity<T> {
+    @Column(name = "id")
     T id;
 
     public T getId() {

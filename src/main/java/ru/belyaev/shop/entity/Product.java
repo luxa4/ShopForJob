@@ -5,18 +5,32 @@
 package ru.belyaev.shop.entity;
 
 
-import ru.belyaev.framework.annotationJDBC.Column;
 
+import org.hibernate.annotations.CollectionId;
+
+import javax.persistence.*;
 import java.math.BigDecimal;
 
+
+@Entity
+@Table(name = "product")
 public class Product extends AbstractEntity<Integer> {
+    @Column(name = "name")
     private String name;
+    @Column(name = "description")
     private String description;
-    @Column("image_link")
+    @Column(name = "image_link")
     private String imageLink;
+    @Column(name = "price")
     private BigDecimal price;
-    private String category;
-    private String producer;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name= "id_category")
+    private Category category;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="id_producer")
+    private Producer producer;
 
     public String getName() {
         return name;
@@ -50,19 +64,19 @@ public class Product extends AbstractEntity<Integer> {
         this.price = price;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 
-    public String getProducer() {
+    public Producer getProducer() {
         return producer;
     }
 
-    public void setProducer(String producer) {
+    public void setProducer(Producer producer) {
         this.producer = producer;
     }
 

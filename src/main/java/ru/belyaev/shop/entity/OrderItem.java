@@ -5,14 +5,21 @@
 package ru.belyaev.shop.entity;
 
 
-import ru.belyaev.framework.annotationJDBC.Child;
-import ru.belyaev.framework.annotationJDBC.Column;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "order_item")
 public class OrderItem extends AbstractEntity<Long> {
-    @Column("id_order")
-    private Long idOrder;
-    @Child(ColumnName = "id_product")
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_order")
+    private Order idOrder;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_product")
     private Product product;
+
+    @Column(name = "count")
     private Integer count;
 
     public OrderItem(Product product, int count) {
@@ -25,11 +32,11 @@ public class OrderItem extends AbstractEntity<Long> {
         super();
     }
 
-    public Long getIdOrder() {
+    public Order getIdOrder() {
         return idOrder;
     }
 
-    public void setIdOrder(Long idOrder) {
+    public void setIdOrder(Order idOrder) {
         this.idOrder = idOrder;
     }
 
@@ -40,8 +47,6 @@ public class OrderItem extends AbstractEntity<Long> {
     public void setProduct(Product product) {
         this.product = product;
     }
-
-
 
     public Integer getCount() {
         return count;

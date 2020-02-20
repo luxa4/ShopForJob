@@ -5,14 +5,19 @@
 package ru.belyaev.shop.entity;
 
 
-import ru.belyaev.framework.annotationJDBC.Column;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "category")
 public class Category extends AbstractEntity<Integer> {
+    @Column(name = "name")
     private String name;
+    @Column(name = "url")
     private String url;
-    @Column("product_count")
+    @Column(name = "product_count")
     private int productCount;
-
 
     public String getName() {
         return name;

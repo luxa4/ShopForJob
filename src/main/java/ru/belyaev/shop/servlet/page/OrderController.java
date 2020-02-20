@@ -25,7 +25,7 @@ public class OrderController extends AbstractController {
 
     private static final String CURRENT_MESSAGE = "CURRENT_MESSAGE";
 
-    @Override
+
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String message = (String) req.getSession().getAttribute("CURRENT_MESSAGE");
         req.getSession().removeAttribute(CURRENT_MESSAGE);
@@ -36,7 +36,7 @@ public class OrderController extends AbstractController {
 
     }
 
-    @Override
+
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ShoppingCart shoppingCart = SessionUtil.getCurrentShoppingCart(req);
 

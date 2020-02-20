@@ -10,13 +10,6 @@ import java.util.List;
 
 public interface OrderService {
 
-
-    void addProductToShoppingCart(ProductForm productForm, ShoppingCart shoppingCart);
-
-    void removeProductFromShoppingCart(ProductForm productForm, ShoppingCart shoppingCart);
-
-    CurrentAccount authenticate(SocialAccount socialAccount);
-
     long makeOrder(ShoppingCart shoppingCart, CurrentAccount currentAccount);
 
     Order findOrderById(Long id, CurrentAccount currentAccount);
@@ -24,6 +17,13 @@ public interface OrderService {
     List<Order> listMyOrders(CurrentAccount currentAccount, int page, int limit);
 
     int countMyOrders(CurrentAccount currentAccount);
+
+
+    void addProductToShoppingCart(ProductForm productForm, ShoppingCart shoppingCart);
+
+    void removeProductFromShoppingCart(ProductForm productForm, ShoppingCart shoppingCart);
+
+    CurrentAccount authenticate(SocialAccount socialAccount);
 
     String serializeShoppingCart(ShoppingCart shoppingCart);
 }

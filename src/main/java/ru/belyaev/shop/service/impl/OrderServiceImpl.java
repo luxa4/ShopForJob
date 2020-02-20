@@ -1,6 +1,9 @@
 package ru.belyaev.shop.service.impl;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.belyaev.shop.entity.Account;
 import ru.belyaev.shop.entity.Order;
 import ru.belyaev.shop.entity.OrderItem;
@@ -16,6 +19,7 @@ import ru.belyaev.shop.model.CurrentAccount;
 import ru.belyaev.shop.model.ShoppingCart;
 import ru.belyaev.shop.model.ShoppingCartItem;
 import ru.belyaev.shop.model.SocialAccount;
+import ru.belyaev.shop.repositories.*;
 import ru.belyaev.shop.service.OrderService;
 
 
@@ -27,58 +31,52 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-
+@Service
 class OrderServiceImpl implements OrderService {
+
+    @Autowired
+    private AccountDao accountDao;
+    @Autowired
+    private CategoryDao categoryDao;
+    @Autowired
+    private OrderDao orderDao;
+    @Autowired
+    private OrderItemDao orderItemDao;
+    @Autowired
+    private ProductDao productDao;
+
 
     @Override
     public void removeProductFromShoppingCart(ProductForm productForm, ShoppingCart shoppingCart) {
         shoppingCart.removeProduct(productForm.getIdProduct(), productForm.getCount());
     }
 
-    private static final ResultSetHandler<Product> productsResultSetHandler =
-            ResultSetHandlerFactory.getSingleResultSethandler(ResultSetHandlerFactory.RESULT_SET_HANDLER_PRODUCT);
-    private static final ResultSetHandler<List<OrderItem>> orderItemListResultSetHandler =
-            ResultSetHandlerFactory.getListResultSetHandler(ResultSetHandlerFactory.RESULT_SET_HANDLER_ORDER_ITEM);
-    private static final ResultSetHandler<Order> orderResultSetHandler =
-            ResultSetHandlerFactory.getSingleResultSethandler(ResultSetHandlerFactory.RESULT_SET_HANDLER_ORDER);
-    private static final ResultSetHandler<List<Order>> ordersResultSetHandler =
-            ResultSetHandlerFactory.getListResultSetHandler(ResultSetHandlerFactory.RESULT_SET_HANDLER_ORDER);
-
-    private static final ResultSetHandler<Integer> countResultSetHandler = ResultSetHandlerFactory.getCountResultSet();
-
-
-    private final DataSource dataSource;
-
-    public OrderServiceImpl(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
-
-    @Override
+        @Override
     public void addProductToShoppingCart(ProductForm productForm, ShoppingCart shoppingCart) {
-        try (Connection c = dataSource.getConnection()) {
-            Product product =  JDBCUtil.select(c, "SELECT p.*, c.name as category, pr.name as producer FROM product p, producer pr, category c "
-                    + "WHERE c.id=p.id_category and pr.id=p.id_producer and p.id=?", productsResultSetHandler, productForm.getIdProduct());
+        try  {
+            Product product =  productDao.findProductById(productForm.getIdProduct());
         if(product == null)
             throw new InternalServerErrorException("Product is not found in DataBase: id: " + productForm.getIdProduct());
 
         shoppingCart.addProduct(product,productForm.getCount());
-        } catch (SQLException e) {
-            throw new InternalServerErrorException("Can't execute sql query: " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Can't execute sql query addProductToShoppingCart: " + e.getMessage(), e);
         }
     }
 
+    @Transactional
     @Override
     public long makeOrder(ShoppingCart shoppingCart, CurrentAccount currentAccount) {
         if (shoppingCart == null || shoppingCart.getItems().isEmpty()) {
             throw new InternalServerErrorException("Shopping cart is null or empty");
         }
-        try (Connection c = dataSource.getConnection()) {
+        try {
             // Добавление в базу заказа
-//            System.out.println( new Timestamp(System.currentTimeMillis()));
-//            System.out.println(currentAccount.getId());
-//            System.out.println( new Timestamp(System.currentTimeMillis()));
-            Order order = JDBCUtil.insert(c, "INSERT INTO \"order\" VALUES (nextval('order_seq'),?,?)",
-                    orderResultSetHandler , currentAccount.getId(), new Timestamp(System.currentTimeMillis()));
+            Order order = new Order();
+            order.setIdAccount(currentAccount.getId());
+            order.setCreated(new Timestamp(System.currentTimeMillis()));
+            orderDao.save(order);
+
             // добавление в базу элементов, созданного заказ
             JDBCUtil.insertBatch(c, "INSERT INTO order_item VALUES (nextval('order_item_seq'),?,?,?,?) ", toOrderItemParameterList(order.getId(),shoppingCart.getItems(), currentAccount));
             c.commit();
@@ -100,7 +98,7 @@ class OrderServiceImpl implements OrderService {
 
     @Override
     public CurrentAccount authenticate(SocialAccount socialAccount) {
-        try (Connection c = dataSource.getConnection()) {
+        try {
             Account account = JDBCUtil.select(c, "SELECT * FROM account WHERE email=?",
                     ResultSetHandlerFactory.getSingleResultSethandler(ResultSetHandlerFactory.RESULT_SET_HANDLER_ACCOUNT), socialAccount.getEmail());
             if (account == null) {
@@ -117,8 +115,8 @@ class OrderServiceImpl implements OrderService {
 
     @Override
     public Order findOrderById(Long id, CurrentAccount currentAccount) {
-        try (Connection c = dataSource.getConnection()) {
-            Order order = JDBCUtil.select(c, "select * from \"order\" where id=?", orderResultSetHandler, id);
+        try  {
+            Order order = orderDao.findOrOrderById(id);
             if (order == null) {
                 throw new ResourceNotFoundException("Order not found by id: " + id);
             }
@@ -139,17 +137,17 @@ class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> listMyOrders(CurrentAccount currentAccount, int page, int limit) {
         int offset = (page - 1) * limit;
-        try (Connection c = dataSource.getConnection()) {
+        try  {
             List<Order> orders = JDBCUtil.select(c, "select * from \"order\" where id_account=? order by id desc limit ? offset ?", ordersResultSetHandler, currentAccount.getId(), limit, offset);
             return orders;
-        } catch (SQLException e) {
-            throw new InternalServerErrorException("Can't execute SQL request: " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Can't execute SQL request listMyOrders: " + e.getMessage(), e);
         }
     }
 
     @Override
     public int countMyOrders(CurrentAccount currentAccount) {
-        try (Connection c = dataSource.getConnection()) {
+        try  {
             return JDBCUtil.select(c, "select count(*) from \"order\" where id_account=?", countResultSetHandler, currentAccount.getId());
         } catch (SQLException e) {
             throw new InternalServerErrorException("Can't execute SQL request: " + e.getMessage(), e);

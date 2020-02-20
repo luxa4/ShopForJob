@@ -8,8 +8,12 @@
 	<div class="row">
 			<jsp:include page="../fragment/product-list.jsp" />
 	</div>
-	<div class="text-center hidden-print">
-       <a id="loadMore" class="btn btn-success">Load more products</a>
-	</div>
+
+	<c:if test="${pageCount > 1 }">
+		<div class="text-center hidden-print">
+			<a id="loadMore" class="btn btn-success">Load more products</a>
+		</div>
+	</c:if>
+
 </div>
 <ishop:add-product-popup />    

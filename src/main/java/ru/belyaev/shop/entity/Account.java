@@ -6,8 +6,16 @@ package ru.belyaev.shop.entity;
 
 import ru.belyaev.shop.model.CurrentAccount;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "account")
 public class Account extends AbstractEntity<Integer> implements CurrentAccount {
+    @Column(name = "name")
     private String name;
+    @Column(name = "email")
     private String email;
 
     public String getName() {

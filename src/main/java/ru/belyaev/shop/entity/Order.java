@@ -5,19 +5,25 @@
 package ru.belyaev.shop.entity;
 
 
-import ru.belyaev.framework.annotationJDBC.Column;
-import ru.belyaev.framework.annotationJDBC.Transient;
 
+
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
+@Entity
+@Table(name="order")
 public class Order extends AbstractEntity<Long> {
-    @Column("id_account")
+    @Column(name = "id_account")
     private Integer idAccount;
-    @Transient
+
+    @OneToMany(mappedBy = "idOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> products;
+
+    @Column(name = "created")
     private Timestamp created;
+
     @Transient
     private int totalCount;
 
