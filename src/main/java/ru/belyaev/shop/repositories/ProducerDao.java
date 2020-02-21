@@ -7,15 +7,16 @@
 package ru.belyaev.shop.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.belyaev.shop.entity.Producer;
-import ru.belyaev.shop.entity.Product;
+
 
 import java.util.List;
 
 @Repository
 public interface ProducerDao extends JpaRepository<Producer, Integer> {
 
-    // return list of all Producers - edit sql query - Нужно для отображения производителей в списке поиска блока ASIDE
+    @Query("SELECT pr FROM Producer pr ORDER BY pr.name")
     List<Producer> listAllProducers();
 }

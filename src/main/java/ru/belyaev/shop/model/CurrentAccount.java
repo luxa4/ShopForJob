@@ -4,6 +4,9 @@
 
 package ru.belyaev.shop.model;
 
+import org.springframework.stereotype.Component;
+
+
 public interface CurrentAccount {
 
     Integer getId();

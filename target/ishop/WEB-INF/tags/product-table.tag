@@ -19,7 +19,7 @@
     <tbody>
     <c:forEach var="item" items="${items }">
         <tr id="product${item.product.id }" class="item">
-            <td class="text-center"><img class="small" src="${item.product.imageLink }" alt="${item.product.name }"><br>${item.product.name }</td>
+            <td class="text-center"><img class="small" src="<c:url value="/static${item.product.imageLink}" />" alt="${item.product.name }"><br>${item.product.name }</td>
             <td class="price">$ ${item.product.price }</td>
             <td class="count">${item.count }</td>
             <c:if test="${showActionColumn }">

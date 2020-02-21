@@ -1,5 +1,6 @@
 package ru.belyaev.shop.model;
 
+import org.springframework.stereotype.Component;
 import ru.belyaev.shop.Constants;
 import ru.belyaev.shop.entity.Product;
 import ru.belyaev.shop.exception.ValidationException;
@@ -11,6 +12,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class ShoppingCart {
     private int totalCount=0;
     private BigDecimal totalCost = BigDecimal.ZERO;

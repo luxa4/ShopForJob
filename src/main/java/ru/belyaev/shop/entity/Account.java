@@ -6,13 +6,27 @@ package ru.belyaev.shop.entity;
 
 import ru.belyaev.shop.model.CurrentAccount;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "account")
-public class Account extends AbstractEntity<Integer> implements CurrentAccount {
+public class Account implements CurrentAccount {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    Integer id;
+
+
+    @Override
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     @Column(name = "name")
     private String name;
     @Column(name = "email")

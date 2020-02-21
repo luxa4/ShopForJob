@@ -13,4 +13,6 @@ import ru.belyaev.shop.entity.Product;
 
 @Repository
 public interface AccountDao extends JpaRepository<Account, Integer> {
+
+    Account findAccountByEmail(String email);
 }

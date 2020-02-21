@@ -16,6 +16,6 @@ import java.util.List;
 @Repository
 public interface CategoryDao extends JpaRepository<Category, Integer> {
 
-    @Query("SELECT c FROM Category c")
+    @Query("Select c FROM Category c Order by c.name")
     List<Category> listAllCategories();
 }

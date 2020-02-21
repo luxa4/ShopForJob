@@ -12,9 +12,6 @@ import ru.belyaev.shop.exception.AccessDeniedException;
 import ru.belyaev.shop.exception.InternalServerErrorException;
 import ru.belyaev.shop.exception.ResourceNotFoundException;
 import ru.belyaev.shop.form.ProductForm;
-import ru.belyaev.shop.jdbc.JDBCUtil;
-import ru.belyaev.shop.jdbc.ResultSetHandler;
-import ru.belyaev.shop.jdbc.ResultSetHandlerFactory;
 import ru.belyaev.shop.model.CurrentAccount;
 import ru.belyaev.shop.model.ShoppingCart;
 import ru.belyaev.shop.model.ShoppingCartItem;
@@ -23,9 +20,7 @@ import ru.belyaev.shop.repositories.*;
 import ru.belyaev.shop.service.OrderService;
 
 
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,6 +39,8 @@ class OrderServiceImpl implements OrderService {
     private OrderItemDao orderItemDao;
     @Autowired
     private ProductDao productDao;
+    @Autowired
+    private ProducerDao producerDao;
 
 
     @Override
@@ -78,37 +75,41 @@ class OrderServiceImpl implements OrderService {
             orderDao.save(order);
 
             // добавление в базу элементов, созданного заказ
-            JDBCUtil.insertBatch(c, "INSERT INTO order_item VALUES (nextval('order_item_seq'),?,?,?,?) ", toOrderItemParameterList(order.getId(),shoppingCart.getItems(), currentAccount));
-            c.commit();
+            List<OrderItem> listOrderItems = toOrderItemParameterList(order.getId(),shoppingCart.getItems());
+            orderItemDao.saveAll(listOrderItems);
+
             return order.getId();
-        } catch (SQLException e) {
-            throw new InternalServerErrorException("Ошибка в добавлении заказа в Базу данных");
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Ошибка в добавлении заказа в Базу данных -> makeOrder");
         }
 
     }
 
-    private List<Object[]> toOrderItemParameterList(long idOrder, Collection<ShoppingCartItem> items, CurrentAccount currentAccount) {
-        List<Object[]> parameterList = new ArrayList<>();
+    private List<OrderItem> toOrderItemParameterList(long idOrder, Collection<ShoppingCartItem> items) {
+        List<OrderItem> parameterList = new ArrayList<>();
         for (ShoppingCartItem item: items) {
-            parameterList.add(new Object[] {idOrder, item.getProduct().getId(), currentAccount.getId(), item.getCount()});
+            OrderItem orderItem = new OrderItem();
+            orderItem.setId(idOrder);
+            orderItem.setProduct(item.getProduct());
+            orderItem.setCount(item.getCount());
+
+            parameterList.add(orderItem);
         }
         return parameterList;
     }
 
 
+    @Transactional
     @Override
     public CurrentAccount authenticate(SocialAccount socialAccount) {
         try {
-            Account account = JDBCUtil.select(c, "SELECT * FROM account WHERE email=?",
-                    ResultSetHandlerFactory.getSingleResultSethandler(ResultSetHandlerFactory.RESULT_SET_HANDLER_ACCOUNT), socialAccount.getEmail());
+            Account account = accountDao.findAccountByEmail(socialAccount.getEmail());
             if (account == null) {
                 account = new Account(socialAccount.getName(), socialAccount.getEmail());
-                JDBCUtil.insert(c, "INSERT INTO account VALUES (nextval('account_seq'), ?, ?)",
-                        ResultSetHandlerFactory.getSingleResultSethandler(ResultSetHandlerFactory.RESULT_SET_HANDLER_ACCOUNT), socialAccount.getName(), socialAccount.getEmail());
-                c.commit();
+                accountDao.save(account);
             }
             return account;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw  new InternalServerErrorException("SQL exception - cant add new Account");
         }
     }
@@ -116,21 +117,18 @@ class OrderServiceImpl implements OrderService {
     @Override
     public Order findOrderById(Long id, CurrentAccount currentAccount) {
         try  {
-            Order order = orderDao.findOrOrderById(id);
+            Order order = orderDao.findOrderById(id);
             if (order == null) {
                 throw new ResourceNotFoundException("Order not found by id: " + id);
             }
             if (!order.getIdAccount().equals(currentAccount.getId())) {
                 throw new AccessDeniedException("Account with id=" + currentAccount.getId() + " is not owner for order with id=" + id);
             }
-            List<OrderItem> list = JDBCUtil.select(c,
-                    "select o.id as oid, o.id_order as id_order, o.id_product, o.count, p.*, c.name as category, pr.name as producer from order_item o, product p, category c, producer pr "
-                            + "where pr.id=p.id_producer and c.id=p.id_category and o.id_product=p.id and o.id_order=?",
-                    orderItemListResultSetHandler, id);
+            List<OrderItem> list =  orderItemDao.findOrderItemByIdOrder(id);
             order.setProducts(list);
             return order;
-        } catch (SQLException e) {
-            throw new InternalServerErrorException("Can't execute SQL request: " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Can't execute SQL request findOrderById: " + e.getMessage(), e);
         }
     }
 
@@ -138,7 +136,7 @@ class OrderServiceImpl implements OrderService {
     public List<Order> listMyOrders(CurrentAccount currentAccount, int page, int limit) {
         int offset = (page - 1) * limit;
         try  {
-            List<Order> orders = JDBCUtil.select(c, "select * from \"order\" where id_account=? order by id desc limit ? offset ?", ordersResultSetHandler, currentAccount.getId(), limit, offset);
+            List<Order> orders = orderDao.listMyOrders(currentAccount.getId(), offset, limit);
             return orders;
         } catch (Exception e) {
             throw new InternalServerErrorException("Can't execute SQL request listMyOrders: " + e.getMessage(), e);
@@ -148,9 +146,9 @@ class OrderServiceImpl implements OrderService {
     @Override
     public int countMyOrders(CurrentAccount currentAccount) {
         try  {
-            return JDBCUtil.select(c, "select count(*) from \"order\" where id_account=?", countResultSetHandler, currentAccount.getId());
-        } catch (SQLException e) {
-            throw new InternalServerErrorException("Can't execute SQL request: " + e.getMessage(), e);
+            return orderDao.countOrderByIdAccount(currentAccount.getId());
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Can't execute SQL request countMyOrders: " + e.getMessage(), e);
         }
     }
 

@@ -1,7 +1,9 @@
 package ru.belyaev.shop.model;
 
+import org.springframework.stereotype.Component;
 import ru.belyaev.shop.entity.Product;
 
+@Component
 public class ShoppingCartItem {
     private Product product;
     private int count;

@@ -4,6 +4,8 @@
 
 package ru.belyaev.shop.form;
 
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

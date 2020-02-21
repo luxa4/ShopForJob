@@ -27,7 +27,8 @@ public class ServiceManager {
     @Autowired
     public OrderService orderService;
 
-
+    public ServiceManager() {
+    }
 }
 
 

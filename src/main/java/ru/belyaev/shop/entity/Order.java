@@ -14,7 +14,13 @@ import java.util.List;
 
 @Entity
 @Table(name="order")
-public class Order extends AbstractEntity<Long> {
+public class Order  {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    long id;
+
     @Column(name = "id_account")
     private Integer idAccount;
 
@@ -26,6 +32,22 @@ public class Order extends AbstractEntity<Long> {
 
     @Transient
     private int totalCount;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public int getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
+    }
 
     public int getTotalCount(List<OrderItem> products) {
         totalCount = 0;

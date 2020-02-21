@@ -6,7 +6,7 @@ package ru.belyaev.shop.entity;
 
 
 
-import org.hibernate.annotations.CollectionId;
+
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -14,7 +14,12 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "product")
-public class Product extends AbstractEntity<Integer> {
+public class Product  {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    int id;
+
     @Column(name = "name")
     private String name;
     @Column(name = "description")
@@ -31,6 +36,15 @@ public class Product extends AbstractEntity<Integer> {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="id_producer")
     private Producer producer;
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

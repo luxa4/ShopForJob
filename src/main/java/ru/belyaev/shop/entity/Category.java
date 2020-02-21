@@ -5,19 +5,31 @@
 package ru.belyaev.shop.entity;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "category")
-public class Category extends AbstractEntity<Integer> {
+public class Category  {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    int id;
+
     @Column(name = "name")
     private String name;
     @Column(name = "url")
     private String url;
     @Column(name = "product_count")
     private int productCount;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

@@ -9,9 +9,16 @@ package ru.belyaev.shop.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import ru.belyaev.shop.entity.Order;
 import ru.belyaev.shop.entity.OrderItem;
 import ru.belyaev.shop.entity.Product;
+import ru.belyaev.shop.model.CurrentAccount;
+
+import java.util.List;
 
 @Repository
 public interface OrderItemDao extends JpaRepository<OrderItem, Integer> {
+
+
+    List<OrderItem> findOrderItemByIdOrder(Long id);
 }

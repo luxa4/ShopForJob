@@ -8,22 +8,10 @@ import ru.belyaev.shop.entity.Category;
 import ru.belyaev.shop.entity.Producer;
 import ru.belyaev.shop.entity.Product;
 import ru.belyaev.shop.exception.InternalServerErrorException;
-import ru.belyaev.shop.form.SearchForm;
-import ru.belyaev.shop.jdbc.JDBCUtil;
-import ru.belyaev.shop.jdbc.ResultSetHandler;
-import ru.belyaev.shop.jdbc.ResultSetHandlerFactory;
-import ru.belyaev.shop.jdbc.SearchQuery;
 import ru.belyaev.shop.repositories.*;
 import ru.belyaev.shop.service.ProductService;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-
-
-
-import javax.sql.DataSource;
 
 @Service
 class ProductServiceImpl implements ProductService {
@@ -38,13 +26,15 @@ class ProductServiceImpl implements ProductService {
     private OrderItemDao orderItemDao;
     @Autowired
     private ProductDao productDao;
+    @Autowired
+    private ProducerDao producerDao;
 
 
     @Override
     public List<Product> listAllProduct(int page, int limit) {
         try {
             int offset = (page - 1) * limit;
-            return productDao.listAllProduct(limit, offset);
+            return productDao.listAllProduct();
         } catch (Exception e) {
             throw new InternalServerErrorException("Can't execute sql query listAllProduct: " + e.getMessage(), e);
         }
@@ -59,47 +49,45 @@ class ProductServiceImpl implements ProductService {
         }
     }
 
-//    @Override
-//    public List<Product> listProductsByCategory(String categoryUrl, int page, int limit) {
-//        try {
-//            int offset = (page - 1) * limit;
-//            return JDBCUtil.select(c, "SELECT p.*, c.name as category, pr.name as producer FROM product p, producer pr, category c "
-//                    + "WHERE c.id=p.id_category and pr.id=p.id_producer and c.url=?  limit ? offset ?", productsResultSetHandler, categoryUrl, limit, offset);
-//        } catch (SQLException e) {
-//            throw new InternalServerErrorException("Cant execute sql query:" + e.getMessage(), e);
-//        }
-//    }
-//
-//    @Override
-//    public int countAllProductByCategory(String categoryUrl) {
-//        try {
-//            return JDBCUtil.select(c, "SELECT count(*) FROM product p, producer pr, category c "
-//                    + "WHERE c.id=p.id_category and pr.id=p.id_producer and c.url=? ", ResultSetHandlerFactory.getCountResultSet(), categoryUrl);
-//        } catch (SQLException e) {
-//            throw new InternalServerErrorException("Cant execute sql query:" + e.getMessage(), e);
-//        }
-//    }
-//
-//    @Override
-//    public List<Category> listAllCategories() {
-//        try {
-//            return JDBCUtil.select(c, "SELECT * FROM category ORDER BY name", ResultSetHandlerFactory.getListResultSetHandler(ResultSetHandlerFactory.RESULT_SET_HANDLER_CATEGORY));
-//        } catch (SQLException e) {
-//            throw new InternalServerErrorException("Cant execute sql query:" + e.getMessage(), e);
-//        }
-//    }
-//
-//    @Override
-//    public List<Producer> listAllProducers() {
-//        try {
-//            return JDBCUtil.select(c, "SELECT * FROM producer ORDER BY name", ResultSetHandlerFactory.getListResultSetHandler(ResultSetHandlerFactory.RESULT_SET_HANDLER_PRODUCERS));
-//        } catch (SQLException e) {
-//            throw new InternalServerErrorException("Cant execute sql query:" + e.getMessage(), e);
-//        }
-//    }
-//
-//
-//
+    @Override
+    public List<Product> listProductsByCategory(String categoryUrl, int page, int limit) {
+        try {
+            int offset = (page - 1) * limit;
+            return productDao.listProductsByCategory(categoryUrl, offset, limit);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Cant execute sql query listProductsByCategory:" + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public int countAllProductByCategory(String categoryUrl) {
+        try {
+            return productDao.countAllProductByCategory(categoryUrl);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Cant execute sql query countAllProductByCategory:" + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<Category> listAllCategories() {
+        try {
+            return categoryDao.listAllCategories();
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Cant execute sql query listAllCategories:" + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<Producer> listAllProducers() {
+        try {
+            return producerDao.listAllProducers();
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Cant execute sql query listAllProducers:" + e.getMessage(), e);
+        }
+    }
+
+
+
 //    @Override
 //    public List<Product> ListProductBySearchForm(SearchForm searchForm, int page, int limit) {
 //      try  {

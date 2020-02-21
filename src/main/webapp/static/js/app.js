@@ -1,9 +1,11 @@
+
 ;$(function(){
 	var init = function (){
 		initBuyBtn();
 		$('#addToCart').click(addProductToCart);
 		$('#addProductPopup .count').change(calculateCost);
 		$('#loadMore').click(loadMoreProducts);
+		$('#loadMoreMyOrders').click(loadMoreMyOrders);
 		initSearchForm();
 		$('#goSearch').click(goSearch);
 		$('.remove-product').click(removeProductFromCart);
@@ -11,19 +13,39 @@
 			postRequest($(this).attr('data-url'));
 		});
 	};
-
-
+	var convertButtonToLoader = function (btn, btnClass) {
+		btn.removeClass(btnClass);
+		btn.removeClass('btn');
+		btn.addClass('load-indicator');
+		var text = btn.text();
+		btn.text('');
+		btn.attr('data-btn-text', text);
+		btn.off('click');
+	};
+	var convertLoaderToButton = function (btn, btnClass, actionClick) {
+		btn.removeClass('load-indicator');
+		btn.addClass('btn');
+		btn.addClass(btnClass);
+		btn.text(btn.attr('data-btn-text'));
+		btn.removeAttr('data-btn-text');
+		btn.click(actionClick);
+	};
 	var postRequest = function(url){
-		var form = '<form id="postRequestForm" action="'+ url +'" method="post"></form>';
+		var form = '<form id="postRequestForm" action="'+url+'" method="post"></form>';
 		$('body').append(form);
 		$('#postRequestForm').submit();
 	};
-
-
+	var confirm = function (msg, okFunction) {
+		if(window.confirm(msg)) {
+			okFunction();
+		}
+	};
+	var alert = function (msg) {
+		window.alert(msg);
+	};
 	var showAddProductPopup = function (){
-
+	    // Берем данные из Card и вставлляем их в Modal окно, а затем только его отображаем
 		var idProduct = $(this).attr('data-id-product');
-
 		var product = $('#product'+idProduct);
 		$('#addProductPopup').attr('data-id-product', idProduct);
 		$('#addProductPopup .product-image').attr('src', product.find('.thumbnail img').attr('src'));
@@ -36,6 +58,7 @@
 		$('#addProductPopup .cost').text(price);
 		$('#addToCart').removeClass('hidden');
 		$('#addToCartIndicator').addClass('hidden');
+		// Отображаем модальное окно
 		$('#addProductPopup').modal({
 			show:true
 		});
@@ -46,33 +69,31 @@
 	var addProductToCart = function (){
 		var idProduct = $('#addProductPopup').attr('data-id-product');
 		var count = $('#addProductPopup .count').val();
-
 		var btn = $('#addToCart');
-		convertButtonToLoader(btn, 'btn-primary')
-
+		convertButtonToLoader(btn, 'btn-primary');
 		$.ajax({
-			url: '/ajax/json/products/add',
-			method: 'POST',
-			data: {
-				idProduct: idProduct,
-				count: count
+			url : '/ajax/json/product/add',
+			method : 'POST',
+			data : {
+				idProduct : idProduct,
+				count : count
 			},
-			success: function(data){
+			success : function(data) {
 				$('#currentShoppingCart .total-count').text(data.totalCount);
 				$('#currentShoppingCart .total-cost').text(data.totalCost);
 				$('#currentShoppingCart').removeClass('hidden');
-
 				convertLoaderToButton(btn, 'btn-primary', addProductToCart);
 				$('#addProductPopup').modal('hide');
-
 			},
-			error: function(data) {
+			error : function(xhr) {
 				convertLoaderToButton(btn, 'btn-primary', addProductToCart);
-				alert('Error');
+				if (xhr.status == 400) {
+					alert(xhr.responseJSON.message);
+				} else {
+					alert('Не сработала JS функция добавления в коризну');
+				}
 			}
-
 		});
-
 	};
 	var calculateCost = function(){
 		var priceStr = $('#addProductPopup .price').text();
@@ -88,25 +109,6 @@
 			$('#addProductPopup .cost').text(priceStr);
 		}
 	};
-	
-	var convertButtonToLoader = function (btn, btnClass) {
-		btn.removeClass(btnClass);
-		btn.removeClass('btn');
-		btn.addClass('load-indicator'); // Всавляем картинку всместо кнопки
-		var text = btn.text();
-		btn.text('');
-		btn.attr('data-btn-text', text);
-		btn.off('click'); // отклбючаем возможность кликунть
-	};
-	var convertLoaderToButton = function (btn, btnClass, actionClick) {
-		btn.removeClass('load-indicator');
-		btn.addClass('btn');
-		btn.addClass(btnClass);
-		btn.text(btn.attr('data-btn-text')); // Достаем из атрибута наш текст - Add to Cart -
-		btn.removeAttr('data-btn-text'); // удаляем атрибут
-		btn.click(actionClick); // срабатывает функция actionClick при клике
-	};
-	
 	var loadMoreProducts = function (){
 		var btn = $('#loadMore');
 		convertButtonToLoader(btn, 'btn-success');
@@ -132,7 +134,6 @@
 			}
 		});
 	};
-
 	var loadMoreMyOrders = function (){
 		var btn = $('#loadMoreMyOrders');
 		convertButtonToLoader(btn, 'btn-success');
@@ -161,6 +162,57 @@
 			}
 		});
 	};
+	/*var loadMore = function (btn, urlTemplate, attrContainer, appendContainer, onSuccess){
+		convertButtonToLoader(btn, 'btn-success');
+		var pageNumber = parseInt(attrContainer.attr('data-page-number'));
+		var url = urlTemplate.replace('$PAGE_NUM',(pageNumber + 1));
+		$.ajax({
+			url : url,
+			success : function(html) {
+				appendContainer.append(html);
+				pageNumber++;
+				var pageCount = parseInt(attrContainer.attr('data-page-count'));
+				attrContainer.attr('data-page-number', pageNumber);
+				if (pageNumber < pageCount) {
+					convertLoaderToButton(btn, 'btn-success', function(){
+						loadMore(btn, urlTemplate, attrContainer, appendContainer, onSuccess);
+					});
+				} else {
+					btn.remove();
+				}
+				if(onSuccess != undefined) {
+					onSuccess();
+				}
+			},
+			error : function(xhr) {
+				convertLoaderToButton(btn, 'btn-success', loadMoreMyOrders);
+				if (xhr.status == 401) {
+					window.location.href = '/sign-in';
+				} else {
+					alert('Error');
+				}
+			}
+		});
+	};
+	var loadMoreProducts = function (){
+		loadMore(
+			$('#loadMore'), 
+			'/ajax/html/more' + location.pathname + '?page=$PAGE_NUM&' + location.search.substring(1),
+			$('#productList'),
+			$('#productList .row'),
+			function(){
+				initBuyBtn();
+			}
+		);
+	};
+	var loadMoreMyOrders = function (){
+		loadMore(
+			$('#loadMoreMyOrders'), 
+			'/ajax/html/more/my-orders?page=$PAGE_NUM',
+			$('#myOrders'),
+			$('#myOrders tbody')
+		);
+	};*/
 	var initSearchForm = function (){
 		$('#allCategories').click(function(){
 			$('.categories .search-option').prop('checked', $(this).is(':checked'));
@@ -192,11 +244,6 @@
 			$('.producers .search-option').prop('checked', false);
 		}
 		$('form.search').submit();
-	};
-	var confirm = function (msg, okFunction) {
-		if(window.confirm(msg)) {
-			okFunction();
-		}
 	};
 	var removeProductFromCart = function (){
 		var btn = $(this);

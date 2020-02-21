@@ -1,4 +1,5 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" trimDirectiveWhitespaces="true" isELIgnored="false" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,12 +9,12 @@
 <title>Ishop - main page</title>
 
 
-	<%--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">--%>
+	<link href="<c:url value="/static/css/bootstrap-theme.css" />" rel="stylesheet">
+	<link href="<c:url value="/static/css/font-awesome.css" />" rel="stylesheet">
+	<link href="<c:url value="/static/css/bootstrap.css" />" rel="stylesheet">
+	<link href="<c:url value="/static/css/app.css" />" rel="stylesheet">
 
-<link href="/static/css/bootstrap-theme.css" type="text/css" rel="stylesheet">
-<link href="/static/css/font-awesome.css" type="text/css" rel="stylesheet">
-<link href="/static/css/bootstrap.css" type="text/css" rel="stylesheet">
-<link href="/static/css/app.css" type="text/css" rel="stylesheet">
+
 
 </head>
 <body>
@@ -33,8 +34,10 @@
 	<footer class="footer">
 		<jsp:include page="fragment/footer.jsp" />
 	</footer>
-	<script src="/static/js/jquery.js" ></script>
-	<script src="/static/js/bootstrap.js" ></script>
-	<script src="/static/js/app.js" ></script>
+
+
+    <script src="<c:url value="/static/js/jquery.js"/>" ></script>
+    <script src="<c:url value="/static/js/bootstrap.js"/>" ></script>
+    <script src="<c:url value="/static/js/app.js"/>" ></script>
 </body>
 </html>

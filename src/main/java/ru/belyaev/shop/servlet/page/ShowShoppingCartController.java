@@ -4,6 +4,9 @@
 
 package ru.belyaev.shop.servlet.page;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import ru.belyaev.shop.servlet.AbstractController;
 import ru.belyaev.shop.util.RoutingUtil;
 import ru.belyaev.shop.util.SessionUtil;
@@ -14,12 +17,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/shopping-cart")
+@Controller
 public class ShowShoppingCartController extends AbstractController {
 
     private static final long serialVersionUID = 2057475736109395575L;
 
-    @Override
+    @RequestMapping(value = "/shopping-cart", method = RequestMethod.GET)
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         // Verify if SoppingCart is null, we redirect to /products

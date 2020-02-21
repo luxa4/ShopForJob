@@ -4,6 +4,9 @@
 
 package ru.belyaev.shop.model;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class SocialAccount {
     private String name;
     private String email;

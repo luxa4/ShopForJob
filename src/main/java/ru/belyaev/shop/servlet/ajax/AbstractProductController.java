@@ -23,7 +23,7 @@ public abstract class AbstractProductController extends AbstractController {
 
     private static final long serialVersionUID = -2428231199680000991L;
 
-    @Override
+
     protected final void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ProductForm form = createProductForm(req);
         ShoppingCart shoppingCart = getCurrentShoppingCart(req);

@@ -9,7 +9,12 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "order_item")
-public class OrderItem extends AbstractEntity<Long> {
+public class OrderItem  {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_order")
@@ -26,6 +31,14 @@ public class OrderItem extends AbstractEntity<Long> {
         super();
         this.product = product;
         this.count = count;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public OrderItem() {

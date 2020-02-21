@@ -12,7 +12,7 @@
 		<div id="product${p.id}" class="panel panel-default product">
 			<div class="panel-body">
 				<div class="thumbnail">
-					<img src="${p.imageLink}" alt="${p.name}">
+					<img src="<c:url value="/static${p.imageLink}" />" alt="${p.name}">
 					<div class="desc">
 						<div class="cell">
 							<p>
@@ -26,8 +26,8 @@
 				<div class="price">$ ${p.price}</div>
 				<a class="btn btn-primary pull-right buy-btn" data-id-product="${p.id}">Buy</a>
 				<div class="list-group">
-					<span class="list-group-item"> <small>Category:</small> <span class="category"> ${p.category}</span></span>
-                    <span class="list-group-item"> <small>Producer:</small> <span class="producer"> ${p.producer}</span></span>
+					<span class="list-group-item"> <small>Category:</small> <span class="category"> ${p.category.name}</span></span>
+                    <span class="list-group-item"> <small>Producer:</small> <span class="producer"> ${p.producer.name}</span></span>
 				</div>
 			</div>
 		</div>
