@@ -14,11 +14,11 @@ public class OrderItem  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    long id;
+    Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_order")
-    private Order idOrder;
+    private Order order;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_product")
@@ -33,11 +33,11 @@ public class OrderItem  {
         this.count = count;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -45,12 +45,12 @@ public class OrderItem  {
         super();
     }
 
-    public Order getIdOrder() {
-        return idOrder;
+    public Order getOrder() {
+        return order;
     }
 
-    public void setIdOrder(Order idOrder) {
-        this.idOrder = idOrder;
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     public Product getProduct() {
@@ -72,7 +72,7 @@ public class OrderItem  {
     @Override
     public String toString() {
         return "OrderItem{" +
-                "idOrder=" + idOrder +
+                "idOrder=" + order +
                 ", product=" + product +
                 ",  count=" + count +
                 ", id=" + id +

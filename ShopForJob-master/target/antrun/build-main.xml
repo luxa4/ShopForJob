@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <delete dir="C:\Users\Саша\Desktop\Portfolio/src/main/webapp/WEB-INF/lib"/>
+  <copy todir="C:\Users\Саша\Desktop\Portfolio/src/main/webapp/WEB-INF/lib">
+    <fileset dir="C:\Users\Саша\Desktop\Portfolio/target/ishop/WEB-INF/lib"/>
+  </copy>
+</target>
+</project>

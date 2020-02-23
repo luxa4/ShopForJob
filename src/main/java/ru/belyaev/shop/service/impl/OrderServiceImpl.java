@@ -1,6 +1,8 @@
 package ru.belyaev.shop.service.impl;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +20,7 @@ import ru.belyaev.shop.model.ShoppingCartItem;
 import ru.belyaev.shop.model.SocialAccount;
 import ru.belyaev.shop.repositories.*;
 import ru.belyaev.shop.service.OrderService;
-
+import ru.belyaev.shop.servlet.page.AllProductController;
 
 
 import java.sql.Timestamp;
@@ -28,6 +30,8 @@ import java.util.List;
 
 @Service
 class OrderServiceImpl implements OrderService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrderServiceImpl.class);
 
     @Autowired
     private AccountDao accountDao;
@@ -69,13 +73,18 @@ class OrderServiceImpl implements OrderService {
         }
         try {
             // Добавление в базу заказа
+            LOGGER.info("-->>> Создаем объект заказа");
             Order order = new Order();
             order.setIdAccount(currentAccount.getId());
+            LOGGER.info("-->>> Присваиваем Id_account {}", currentAccount.getId());
             order.setCreated(new Timestamp(System.currentTimeMillis()));
+            LOGGER.info("-->>> Присваиваем время заказа {}", new Timestamp(System.currentTimeMillis()));
+            LOGGER.info("-->>> Saving order ...");
             orderDao.save(order);
+            LOGGER.info("-->>> Заказ сохранен - номер {}", order.getId());
 
             // добавление в базу элементов, созданного заказ
-            List<OrderItem> listOrderItems = toOrderItemParameterList(order.getId(),shoppingCart.getItems());
+            List<OrderItem> listOrderItems = toOrderItemParameterList(order,shoppingCart.getItems());
             orderItemDao.saveAll(listOrderItems);
 
             return order.getId();
@@ -85,13 +94,19 @@ class OrderServiceImpl implements OrderService {
 
     }
 
-    private List<OrderItem> toOrderItemParameterList(long idOrder, Collection<ShoppingCartItem> items) {
+    private List<OrderItem> toOrderItemParameterList(Order order, Collection<ShoppingCartItem> items) {
         List<OrderItem> parameterList = new ArrayList<>();
+        LOGGER.info("-->>> Beginning to execute Products from Cart...  ");
         for (ShoppingCartItem item: items) {
+            LOGGER.info("-->>> НОВЫЙ ПРОДУКТ --- ");
             OrderItem orderItem = new OrderItem();
-            orderItem.setId(idOrder);
+            LOGGER.info("-->>> Создали объект order_item ");
+            orderItem.setOrder(order);
+            LOGGER.info("-->>> Присвоиили номер заказа :{}", order.getId());
             orderItem.setProduct(item.getProduct());
+            LOGGER.info("-->>> Присвоиили продукт - {}", item.getProduct().getName());
             orderItem.setCount(item.getCount());
+            LOGGER.info("-->>> Присвоиили кол-во данного продукта - {}", item.getCount());
 
             parameterList.add(orderItem);
         }
@@ -124,7 +139,7 @@ class OrderServiceImpl implements OrderService {
             if (!order.getIdAccount().equals(currentAccount.getId())) {
                 throw new AccessDeniedException("Account with id=" + currentAccount.getId() + " is not owner for order with id=" + id);
             }
-            List<OrderItem> list =  orderItemDao.findOrderItemByIdOrder(id);
+            List<OrderItem> list =  orderItemDao.findOrderItemByOrder_Id(id);
             order.setProducts(list);
             return order;
         } catch (Exception e) {

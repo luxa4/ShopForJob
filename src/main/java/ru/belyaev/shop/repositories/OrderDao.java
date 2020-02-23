@@ -17,7 +17,7 @@ import ru.belyaev.shop.model.ShoppingCart;
 import java.util.List;
 
 @Repository
-public interface OrderDao extends JpaRepository<Order, Integer> {
+public interface OrderDao extends JpaRepository<Order, Long> {
 
 
 

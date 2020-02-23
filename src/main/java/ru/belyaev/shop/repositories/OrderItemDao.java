@@ -17,8 +17,8 @@ import ru.belyaev.shop.model.CurrentAccount;
 import java.util.List;
 
 @Repository
-public interface OrderItemDao extends JpaRepository<OrderItem, Integer> {
+public interface OrderItemDao extends JpaRepository<OrderItem, Long> {
 
 
-    List<OrderItem> findOrderItemByIdOrder(Long id);
+    List<OrderItem> findOrderItemByOrder_Id(Long id);
 }

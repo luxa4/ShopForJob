@@ -13,18 +13,18 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
-@Table(name="order")
+@Table(name="\"order\"")
 public class Order  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    long id;
+    Long id;
 
     @Column(name = "id_account")
     private Integer idAccount;
 
-    @OneToMany(mappedBy = "idOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> products;
 
     @Column(name = "created")
@@ -33,11 +33,15 @@ public class Order  {
     @Transient
     private int totalCount;
 
-    public long getId() {
+
+    public Order() {
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
