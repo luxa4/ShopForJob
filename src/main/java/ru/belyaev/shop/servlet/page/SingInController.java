@@ -10,30 +10,23 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import ru.belyaev.shop.Constants;
-import ru.belyaev.shop.service.SocialService;
 import ru.belyaev.shop.servlet.AbstractController;
 import ru.belyaev.shop.util.RoutingUtil;
 import ru.belyaev.shop.util.SessionUtil;
-import ru.belyaev.shop.util.WebUtils;
-
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @Controller
-@SessionAttributes({"CATEGORY_LIST", "PRODUCER_LIST"})
 public class SingInController  extends AbstractController {
     private static final long serialVersionUID = -7565542222448593595L;
     private static final Logger LOGGER = LoggerFactory.getLogger(SingInController.class);
 
     @RequestMapping(value = "/sign-in", method = RequestMethod.GET)
-    protected void signInGet (HttpSession httpSession, HttpServletResponse resp, HttpServletRequest req) throws ServletException, IOException {
+    protected void signInGet (HttpServletResponse resp, HttpServletRequest req) throws ServletException, IOException {
         LOGGER.info("-->>> Launching controller sign-in method Get");
         if (SessionUtil.isCurrentAccountCreated(req)) {
             RoutingUtil.redirect("/my-orders", req, resp);

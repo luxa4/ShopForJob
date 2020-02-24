@@ -35,7 +35,7 @@
 				</ul>
 				</c:when>
 				<c:otherwise>
-					<ishop:sing-in classes="navbar-btn navbar-right sign-in" />
+					<ishop:sign-in classes="navbar-btn navbar-right sign-in" />
 				</c:otherwise>
 			</c:choose>
 
