@@ -3,9 +3,11 @@ package ru.belyaev.shop.util;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 import ru.belyaev.shop.Constants;
+import ru.belyaev.shop.entity.Account;
 import ru.belyaev.shop.model.CurrentAccount;
 import ru.belyaev.shop.model.ShoppingCart;
 
@@ -43,16 +45,16 @@ public class SessionUtil {
 
 	}
 
-	public static CurrentAccount getCurrentAccount(HttpServletRequest req) {
-		return (CurrentAccount) req.getSession().getAttribute(Constants.CURRENT_ACCOUNT);
+	public static Account getCurrentAccount(HttpServletRequest req) {
+		return (Account) req.getSession().getAttribute(Constants.CURRENT_ACCOUNT);
     }
 
-    public static void setCurrenAccount(HttpServletRequest req, CurrentAccount currentAccount) {
-		req.getSession().setAttribute(Constants.CURRENT_ACCOUNT, currentAccount);
+    public static void setCurrentAccount(HttpSession httpSession, Account currentAccount) {
+		httpSession.setAttribute(Constants.CURRENT_ACCOUNT, currentAccount);
     }
 
     public static boolean isCurrentAccountCreated(HttpServletRequest req) {
-		if (req.getAttribute(Constants.CURRENT_ACCOUNT) != null) {
+		if (req.getSession().getAttribute(Constants.CURRENT_ACCOUNT) != null) {
 			return true;
 		} else {
 			return false;

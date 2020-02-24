@@ -36,12 +36,11 @@ public class AllProductController extends AbstractController {
     @Autowired
     ServiceManager serviceManager;
 
-
-
     @RequestMapping(value = "/products", method = RequestMethod.GET)
     public ModelAndView showAllPerson(Model model,  HttpSession httpSession ) {
         httpSession.setAttribute("CATEGORY_LIST", serviceManager.productService.listAllCategories());
         httpSession.setAttribute("PRODUCER_LIST", serviceManager.productService.listAllProducers());
+//        List<Product> products = productService.listAllProduct(1, Constants.MAX_PRODUCTS_PER_HTML_PAGE);
         List<Product> products = productService.listAllProduct(1, Constants.MAX_PRODUCTS_PER_HTML_PAGE);
         ModelAndView modelAndView = new ModelAndView();
         model.addAttribute("products", products);

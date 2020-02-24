@@ -6,6 +6,8 @@
 
 package ru.belyaev.shop.repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -19,10 +21,9 @@ import java.util.List;
 @Repository
 public interface ProductDao extends JpaRepository<Product, Integer> {
 
-
-
-    @Query("From Product")
-    List<Product> listAllProduct() ;
+    @Query(value = "SELECT p.*, c.name as category, pr.name as producer FROM product p, producer pr, category c "
+                    + "WHERE c.id=p.id_category and pr.id=p.id_producer offset ?1 limit ?2" , nativeQuery = true)
+    List<Product> listAllProduct(int page, int limit) ;
 
     @Query(value = "SELECT count(*) FROM product p", nativeQuery = true)
     int countAllProducts();
@@ -35,10 +36,7 @@ public interface ProductDao extends JpaRepository<Product, Integer> {
                     + " WHERE c.id=p.id_category and pr.id=p.id_producer and c.url=?1", nativeQuery = true)
     int countAllProductByCategory(String categoryUrl);
 
-
     Product findProductById(int id);
 
 
-
-//    List<Product> ListProductBySearchForm(SearchForm searchForm, int page, int limit);
 }

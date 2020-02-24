@@ -6,6 +6,8 @@
 
 package ru.belyaev.shop.repositories;
 
+import com.sun.prism.shader.Solid_RadialGradient_REFLECT_AlphaTest_Loader;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -16,6 +18,6 @@ import java.util.List;
 @Repository
 public interface CategoryDao extends JpaRepository<Category, Integer> {
 
-    @Query("Select c FROM Category c Order by c.name")
-    List<Category> listAllCategories();
+
+    List<Category> findAllByOrderByName();
 }

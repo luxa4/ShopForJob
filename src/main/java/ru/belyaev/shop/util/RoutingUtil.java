@@ -32,7 +32,6 @@ public final class RoutingUtil {
 
 	public static void sendJSON (JSONObject json, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json");
-
         resp.getWriter().println(json.toString());
         resp.getWriter().close();
 	}

@@ -1,5 +1,8 @@
 //package ru.belyaev.shop.filter;
 //
+//import org.springframework.core.annotation.Order;
+//import org.springframework.stereotype.Component;
+//
 //import java.io.IOException;
 //import java.io.PrintWriter;
 //import java.io.Writer;
@@ -14,7 +17,8 @@
 //import javax.servlet.http.HttpServletResponseWrapper;
 //
 //
-//@WebFilter(filterName="TrimResponseFilter")
+//@Component
+//@Order(3)
 //public class TrimResponseFilter extends AbstractFilter {
 //
 //	@Override

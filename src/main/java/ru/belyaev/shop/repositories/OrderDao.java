@@ -23,7 +23,7 @@ public interface OrderDao extends JpaRepository<Order, Long> {
 
     Order findOrderById(Long id);
 
-    int countOrderByIdAccount(int id);
+    int countOrderByAccount_Id(int id);
 
     @Query(value = "SELECT * FROM \"order\" WHERE id_account=?1 ORDER BY id DESC offset ?2 limit ?3 ", nativeQuery = true)
     List<Order> listMyOrders(int id_account, int page, int limit);

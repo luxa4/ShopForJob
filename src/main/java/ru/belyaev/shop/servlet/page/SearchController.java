@@ -5,8 +5,10 @@
 package ru.belyaev.shop.servlet.page;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.belyaev.shop.Constants;
 import ru.belyaev.shop.entity.Product;
 import ru.belyaev.shop.form.SearchForm;
@@ -25,15 +27,18 @@ import java.util.List;
 //    private static final long serialVersionUID = 509924737698931116L;
 //
 //    @RequestMapping(value = "/search", method = RequestMethod.GET)
-//    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        SearchForm searchForm = createSearchForm(req);
+//    protected void makeSearch (@RequestParam(name = "query", required = false, defaultValue = "") String query,
+//                         @RequestParam(name = "category", required = false) String[] category,
+//                         @RequestParam(name = "producer", required = false) String[] producer,
+//                         HttpServletRequest req, HttpServletResponse resp, Model model) throws ServletException, IOException {
+//        SearchForm searchForm = createSearchForm(query, category, producer);
 //        int countProduct = productService.countProductBySearchFrom(searchForm);
 //        List<Product> products = productService.ListProductBySearchForm(searchForm, 1, Constants.MAX_PRODUCTS_PER_HTML_PAGE);
-//        req.setAttribute("pageCount", pageCount(countProduct,Constants.MAX_PRODUCTS_PER_HTML_PAGE));
-//        req.setAttribute("products", products);
-//        req.setAttribute("searchForm", searchForm);
+//        model.addAttribute("pageCount", pageCount(countProduct, Constants.MAX_PRODUCTS_PER_HTML_PAGE));
+//        model.addAttribute("products", products);
+//        model.addAttribute("searchForm", searchForm);
+//        model.addAttribute("productCount", countProduct); // quantity product that was found
 //
-//        req.setAttribute("productCount", countProduct); // quantity product that was found
 //        RoutingUtil.forwardToPage("search-result.jsp", req, resp);
 //    }
 //}

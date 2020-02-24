@@ -71,7 +71,7 @@ public class ShoppingCart {
 
     public void validateProductCount (int count)  {
         if (count > Constants.MAX_ONE_PRODUCT_COUNT_IN_CART)
-            throw new ValidationException("Вы полождили одного товара больше 10 шт");
+            throw new ValidationException("Вы положили одного товара больше 10 шт");
 
     }
 

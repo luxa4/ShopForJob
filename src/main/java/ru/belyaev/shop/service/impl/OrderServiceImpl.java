@@ -52,7 +52,7 @@ class OrderServiceImpl implements OrderService {
         shoppingCart.removeProduct(productForm.getIdProduct(), productForm.getCount());
     }
 
-        @Override
+    @Override
     public void addProductToShoppingCart(ProductForm productForm, ShoppingCart shoppingCart) {
         try  {
             Product product =  productDao.findProductById(productForm.getIdProduct());
@@ -67,7 +67,7 @@ class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public long makeOrder(ShoppingCart shoppingCart, CurrentAccount currentAccount) {
+    public long makeOrder(ShoppingCart shoppingCart, Account currentAccount) {
         if (shoppingCart == null || shoppingCart.getItems().isEmpty()) {
             throw new InternalServerErrorException("Shopping cart is null or empty");
         }
@@ -75,7 +75,7 @@ class OrderServiceImpl implements OrderService {
             // Добавление в базу заказа
             LOGGER.info("-->>> Создаем объект заказа");
             Order order = new Order();
-            order.setIdAccount(currentAccount.getId());
+            order.setAccount(currentAccount);
             LOGGER.info("-->>> Присваиваем Id_account {}", currentAccount.getId());
             order.setCreated(new Timestamp(System.currentTimeMillis()));
             LOGGER.info("-->>> Присваиваем время заказа {}", new Timestamp(System.currentTimeMillis()));
@@ -96,9 +96,10 @@ class OrderServiceImpl implements OrderService {
 
     private List<OrderItem> toOrderItemParameterList(Order order, Collection<ShoppingCartItem> items) {
         List<OrderItem> parameterList = new ArrayList<>();
+        int i = 1;
         LOGGER.info("-->>> Beginning to execute Products from Cart...  ");
         for (ShoppingCartItem item: items) {
-            LOGGER.info("-->>> НОВЫЙ ПРОДУКТ --- ");
+            LOGGER.info("-->>> НОВЫЙ ПРОДУКТ - {} - ", i);
             OrderItem orderItem = new OrderItem();
             LOGGER.info("-->>> Создали объект order_item ");
             orderItem.setOrder(order);
@@ -107,7 +108,7 @@ class OrderServiceImpl implements OrderService {
             LOGGER.info("-->>> Присвоиили продукт - {}", item.getProduct().getName());
             orderItem.setCount(item.getCount());
             LOGGER.info("-->>> Присвоиили кол-во данного продукта - {}", item.getCount());
-
+            i++;
             parameterList.add(orderItem);
         }
         return parameterList;
@@ -116,7 +117,7 @@ class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public CurrentAccount authenticate(SocialAccount socialAccount) {
+    public Account authenticate(SocialAccount socialAccount) {
         try {
             Account account = accountDao.findAccountByEmail(socialAccount.getEmail());
             if (account == null) {
@@ -130,13 +131,13 @@ class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order findOrderById(Long id, CurrentAccount currentAccount) {
+    public Order findOrderById(Long id, Account currentAccount) {
         try  {
             Order order = orderDao.findOrderById(id);
             if (order == null) {
                 throw new ResourceNotFoundException("Order not found by id: " + id);
             }
-            if (!order.getIdAccount().equals(currentAccount.getId())) {
+            if (!order.getAccount().getId().equals(currentAccount.getId())) {
                 throw new AccessDeniedException("Account with id=" + currentAccount.getId() + " is not owner for order with id=" + id);
             }
             List<OrderItem> list =  orderItemDao.findOrderItemByOrder_Id(id);
@@ -148,7 +149,7 @@ class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> listMyOrders(CurrentAccount currentAccount, int page, int limit) {
+    public List<Order> listMyOrders(Account currentAccount, int page, int limit) {
         int offset = (page - 1) * limit;
         try  {
             List<Order> orders = orderDao.listMyOrders(currentAccount.getId(), offset, limit);
@@ -159,9 +160,9 @@ class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public int countMyOrders(CurrentAccount currentAccount) {
+    public int countMyOrders(Account currentAccount) {
         try  {
-            return orderDao.countOrderByIdAccount(currentAccount.getId());
+            return orderDao.countOrderByAccount_Id(currentAccount.getId());
         } catch (Exception e) {
             throw new InternalServerErrorException("Can't execute SQL request countMyOrders: " + e.getMessage(), e);
         }

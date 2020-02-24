@@ -4,8 +4,6 @@
 
 package ru.belyaev.shop.form;
 
-import org.springframework.stereotype.Component;
-
 
 public class ProductForm {
 

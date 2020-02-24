@@ -2,15 +2,23 @@ package ru.belyaev.shop.service.impl;
 
 
 
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.belyaev.shop.entity.Category;
 import ru.belyaev.shop.entity.Producer;
 import ru.belyaev.shop.entity.Product;
 import ru.belyaev.shop.exception.InternalServerErrorException;
+import ru.belyaev.shop.form.SearchForm;
+import ru.belyaev.shop.jdbc.JDBCUtil;
+import ru.belyaev.shop.jdbc.SearchQuery;
 import ru.belyaev.shop.repositories.*;
 import ru.belyaev.shop.service.ProductService;
 
+import ru.belyaev.shop.util.OffsetBasedPageRequest;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,11 +38,13 @@ class ProductServiceImpl implements ProductService {
     private ProducerDao producerDao;
 
 
+
+
     @Override
     public List<Product> listAllProduct(int page, int limit) {
         try {
             int offset = (page - 1) * limit;
-            return productDao.listAllProduct();
+            return productDao.listAllProduct(offset, limit);
         } catch (Exception e) {
             throw new InternalServerErrorException("Can't execute sql query listAllProduct: " + e.getMessage(), e);
         }
@@ -71,7 +81,7 @@ class ProductServiceImpl implements ProductService {
     @Override
     public List<Category> listAllCategories() {
         try {
-            return categoryDao.listAllCategories();
+            return categoryDao.findAllByOrderByName();
         } catch (Exception e) {
             throw new InternalServerErrorException("Cant execute sql query listAllCategories:" + e.getMessage(), e);
         }
@@ -80,7 +90,7 @@ class ProductServiceImpl implements ProductService {
     @Override
     public List<Producer> listAllProducers() {
         try {
-            return producerDao.listAllProducers();
+            return producerDao.findAllByOrderByName();
         } catch (Exception e) {
             throw new InternalServerErrorException("Cant execute sql query listAllProducers:" + e.getMessage(), e);
         }
@@ -96,8 +106,8 @@ class ProductServiceImpl implements ProductService {
 //            sq.getSql().append(" offset ? limit ?");
 //            sq.getParams().add(offset);
 //            sq.getParams().add(limit);
-//            return JDBCUtil.select(c, sq.getSql().toString() , productsResultSetHandler, sq.getParams().toArray());
-//        } catch (SQLException e) {
+//            return productDao.ListProductBySearchForm(sq.getSql().toString(), sq.getParams().toArray());
+//        } catch (Exception e) {
 //            throw new InternalServerErrorException("Can't execute sql-query - ListProductBySearchForm - :" + e.getMessage(), e);
 //        }
 //
@@ -116,10 +126,10 @@ class ProductServiceImpl implements ProductService {
 //
 //    @Override
 //    public int countProductBySearchFrom(SearchForm searchForm) {
-//        try (Connection c = dataSource.getConnection()) {
+//        try  {
 //            SearchQuery sq = buildSearchQuery(searchForm, " count(*) FROM product p, category c, producer pr " );
-//            return JDBCUtil.select(c, sq.getSql().toString() , ResultSetHandlerFactory.getCountResultSet(), sq.getParams().toArray());
-//        } catch (SQLException e) {
+//            return productDao.countProductBySearchFrom(sq.getSql().toString(), sq.getParams().toArray());
+//        } catch (Exception e) {
 //            throw new InternalServerErrorException("Can't execute sql-query - countProductBySearchFrom - :" + e.getMessage(), e);
 //        }
 //    }

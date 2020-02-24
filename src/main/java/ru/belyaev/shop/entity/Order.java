@@ -21,8 +21,9 @@ public class Order  {
     @Column(name = "id")
     Long id;
 
-    @Column(name = "id_account")
-    private Integer idAccount;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_account")
+    private Account account;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> products;
@@ -65,12 +66,12 @@ public class Order  {
         return totalCount;
     }
 
-    public Integer getIdAccount() {
-        return idAccount;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setIdAccount(Integer idAccount) {
-        this.idAccount = idAccount;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public List<OrderItem> getProducts() {
@@ -106,7 +107,7 @@ public class Order  {
     @Override
     public String toString() {
         return "Order{" +
-                "idAccount=" + idAccount +
+                "account=" + account +
                 ", products=" + products +
                 ", created=" + created +
                 ", totalCount=" + totalCount +

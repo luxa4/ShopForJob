@@ -28,11 +28,8 @@ public abstract class AbstractController {
     public SocialService socialService;
 
 
-    public final SearchForm createSearchForm(HttpServletRequest req){
-        return new SearchForm(
-                req.getParameter("query"),
-                req.getParameterValues("category"),
-                req.getParameterValues("producer"));
+    public final SearchForm createSearchForm(String query, String[] category, String[] producer){
+        return new SearchForm(query,category,producer);
     }
 
     public static int pageCount (int countProduct, int limit) {
@@ -52,10 +49,10 @@ public abstract class AbstractController {
         }
     }
 
-    public final ProductForm createProductForm(HttpServletRequest req){
+    public final ProductForm createProductForm(String idProduct, String count){
         return new ProductForm(
-                Integer.parseInt(req.getParameter("idProduct")),
-                Integer.parseInt(req.getParameter("count"))
+                Integer.parseInt(idProduct),
+                Integer.parseInt(count)
         );
 
     }

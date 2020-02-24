@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import ru.belyaev.shop.form.ProductForm;
 import ru.belyaev.shop.model.ShoppingCart;
@@ -31,9 +32,11 @@ public class AddProductController extends AbstractController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AddProductController.class);
 
     @RequestMapping(value = "/ajax/json/product/add", method = RequestMethod.POST)
-    public void addProductToCart(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void addProductToCart(HttpServletRequest req, HttpServletResponse resp,
+                                 @RequestParam(name = "idProduct") String idProduct,
+                                 @RequestParam(name = "count") String count) throws  IOException {
         LOGGER.info("-->>> Launching {}", AddProductController.class.getSimpleName());
-        ProductForm productForm = createProductForm(req); // Get ProductForm
+        ProductForm productForm = createProductForm(idProduct, count); // Get Product
         ShoppingCart shoppingCart = SessionUtil.getCurrentShoppingCart(req); // Get ShoppingCart
         orderService.addProductToShoppingCart(productForm, shoppingCart); // Add product in Cart
 
