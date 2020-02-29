@@ -3,6 +3,7 @@ package ru.belyaev.shop.service.impl;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ru.belyaev.shop.model.SocialAccount;
 import ru.belyaev.shop.service.OrderService;
@@ -28,6 +29,7 @@ public class ServiceManager {
     public OrderService orderService;
 
     public ServiceManager() {
+
     }
 }
 

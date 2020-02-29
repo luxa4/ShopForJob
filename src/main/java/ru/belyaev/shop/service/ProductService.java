@@ -22,14 +22,18 @@ public interface ProductService {
 
 
     List<Category> listAllCategories();
-//
-//
-//    List<Product> ListProductBySearchForm (SearchForm searchForm, int page, int limit);
-//
-//    int countProductBySearchFrom(SearchForm searchForm);
+
+
+    List<Product> ListProductBySearchForm (SearchForm searchForm, int page, int limit, List<Integer> allCategoriesId, List<Integer> allProducersId);
+
+    int countProductBySearchFrom(SearchForm searchForm, List<Integer> allCategoriesId, List<Integer> allProducersId);
 
     List<Product> listAllProduct(int page, int limit);
 
     int countAllProducts();
+
+    List<Integer> getListCategoriesId();
+
+    List<Integer> getListProducersId();
 
 }

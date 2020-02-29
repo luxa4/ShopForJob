@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.belyaev.shop.entity.Product;
 import ru.belyaev.shop.form.SearchForm;
@@ -21,22 +22,30 @@ import java.util.List;
 @Repository
 public interface ProductDao extends JpaRepository<Product, Integer> {
 
-    @Query(value = "SELECT p.*, c.name as category, pr.name as producer FROM product p, producer pr, category c "
-                    + "WHERE c.id=p.id_category and pr.id=p.id_producer offset ?1 limit ?2" , nativeQuery = true)
-    List<Product> listAllProduct(int page, int limit) ;
+    @Query("SELECT p FROM Product p")
+    List<Product> listAllProduct(Pageable pageable) ;
 
-    @Query(value = "SELECT count(*) FROM product p", nativeQuery = true)
+    @Query("SELECT count(p) FROM Product p")
     int countAllProducts();
 
-    @Query(value = "SELECT p.*, c.name as category, pr.name as producer FROM product p, producer pr, category c "
-                    + "WHERE c.id=p.id_category and pr.id=p.id_producer and c.url=?1  offset ?2 limit ?3" , nativeQuery = true)
-    List<Product> listProductsByCategory(String categoryUrl, int page, int limit);
+    @Query("SELECT p FROM Product p WHERE p.category.url=?1")
+    List<Product> listProductsByCategory(String categoryUrl, Pageable pageable);
 
-    @Query(value = "SELECT count(*) FROM product p, producer pr, category c "
-                    + " WHERE c.id=p.id_category and pr.id=p.id_producer and c.url=?1", nativeQuery = true)
+    @Query("SELECT count(p) FROM Product p WHERE p.category.url=?1")
     int countAllProductByCategory(String categoryUrl);
 
     Product findProductById(int id);
+
+    @Query ("SELECT p FROM Product p WHERE (p.name like %:query% or p.description like %:query%)" +
+            " and (p.producer.id  in (:listProducer)) and (p.category.id in (:listCategory))")
+    List<Product> ListProductBySearchForm(@Param("query") String query, @Param("listProducer") List<Integer> prParam, @Param("listCategory") List<Integer> catParam, Pageable pageable);
+
+    @Query ("SELECT count(p) FROM Product p WHERE (p.name like %:query% or p.description like %:query%)" +
+            " and (p.producer.id  in (:listProducer)) and (p.category.id in (:listCategory))")
+    int countProductBySearchFrom(@Param("query") String query, @Param("listProducer") List<Integer> prParam, @Param("listCategory") List<Integer> catParam);
+
+
+
 
 
 }

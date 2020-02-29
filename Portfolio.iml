@@ -25,6 +25,8 @@
       <configuration>
         <fileset id="fileset" name="SpringConfig" removed="false">
           <file>file://$MODULE_DIR$/src/main/webapp/WEB-INF/springConfig.xml</file>
+          <file>file://$MODULE_DIR$/src/main/resources/springConfig.xml</file>
+          <file>file://$MODULE_DIR$/src/main/resources/applicationContext.xml</file>
         </fileset>
       </configuration>
     </facet>

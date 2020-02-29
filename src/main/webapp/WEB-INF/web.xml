@@ -58,7 +58,9 @@
         <url-pattern>/ajax/html/more/my-orders</url-pattern>
     </filter-mapping>
 
-
+    <listener>
+        <listener-class>ru.belyaev.shop.listener.IShopApplicationListener</listener-class>
+    </listener>
 
 
     <servlet>
@@ -66,7 +68,7 @@
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>/WEB-INF/spring/springConfig.xml</param-value>
+            <param-value>/WEB-INF/spring/dispatcher-servlet.xml</param-value>
         </init-param>
     </servlet>
 

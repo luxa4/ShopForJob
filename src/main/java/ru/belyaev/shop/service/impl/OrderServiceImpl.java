@@ -4,6 +4,8 @@ package ru.belyaev.shop.service.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.belyaev.shop.entity.Account;
@@ -14,13 +16,11 @@ import ru.belyaev.shop.exception.AccessDeniedException;
 import ru.belyaev.shop.exception.InternalServerErrorException;
 import ru.belyaev.shop.exception.ResourceNotFoundException;
 import ru.belyaev.shop.form.ProductForm;
-import ru.belyaev.shop.model.CurrentAccount;
 import ru.belyaev.shop.model.ShoppingCart;
 import ru.belyaev.shop.model.ShoppingCartItem;
 import ru.belyaev.shop.model.SocialAccount;
 import ru.belyaev.shop.repositories.*;
 import ru.belyaev.shop.service.OrderService;
-import ru.belyaev.shop.servlet.page.AllProductController;
 
 
 import java.sql.Timestamp;
@@ -82,7 +82,6 @@ class OrderServiceImpl implements OrderService {
             LOGGER.info("-->>> Saving order ...");
             orderDao.save(order);
             LOGGER.info("-->>> Заказ сохранен - номер {}", order.getId());
-
             // добавление в базу элементов, созданного заказ
             List<OrderItem> listOrderItems = toOrderItemParameterList(order,shoppingCart.getItems());
             orderItemDao.saveAll(listOrderItems);
@@ -150,9 +149,9 @@ class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> listMyOrders(Account currentAccount, int page, int limit) {
-        int offset = (page - 1) * limit;
         try  {
-            List<Order> orders = orderDao.listMyOrders(currentAccount.getId(), offset, limit);
+            Pageable pageable = PageRequest.of(page-1, limit);
+            List<Order> orders = orderDao.listMyOrders(currentAccount.getId(), pageable);
             return orders;
         } catch (Exception e) {
             throw new InternalServerErrorException("Can't execute SQL request listMyOrders: " + e.getMessage(), e);

@@ -1,6 +1,8 @@
 package ru.belyaev.shop.util;
 
 import org.json.JSONObject;
+import org.springframework.ui.Model;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 
@@ -34,6 +36,13 @@ public final class RoutingUtil {
         resp.setContentType("application/json");
         resp.getWriter().println(json.toString());
         resp.getWriter().close();
+	}
+
+	public static ModelAndView forwardToPageMVC(Model model, String page) {
+		model.addAttribute("CURRENT_PAGE", "/WEB-INF/JSP/page/" + page);
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("page-template");
+		return modelAndView;
 	}
 
 }

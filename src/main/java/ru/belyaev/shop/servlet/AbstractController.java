@@ -35,7 +35,7 @@ public abstract class AbstractController {
     public static int pageCount (int countProduct, int limit) {
         int rs = countProduct/limit;
         if (rs*limit != countProduct) {
-            return rs++;
+            return ++rs;
         } else {
             return rs;
         }

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/mvc
+          https://www.springframework.org/schema/mvc/spring-mvc.xsd
+           http://www.springframework.org/schema/context
+            https://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+             http://www.springframework.org/schema/data/jpa
+        https://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
+
+    <tx:annotation-driven transaction-manager="txManager" />
+
+    <jpa:repositories base-package="ru.belyaev.shop.repositories"
+                      entity-manager-factory-ref="emf"
+                      transaction-manager-ref="txManager"/>
+
+    <mvc:annotation-driven />
+    <context:component-scan base-package="ru.belyaev.shop" />
+
+    <mvc:view-controller path="/" view-name="page-template" />
+    <context:property-placeholder location="classpath:/application.properties" />
+
+    <mvc:resources mapping="/static/**" location="/static/" cache-period="31556926"/>
+
+    <bean id="resolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
+        <property name="prefix" value="/WEB-INF/JSP/"/>
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+        <property name="url" value="jdbc:postgresql://localhost:5432/ishop"/>
+        <property name="username" value="postgres"/>
+        <property name="password" value="victory8"/>
+    </bean>
+
+
+    <bean name="emf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" >
+        <property name="dataSource" ref="dataSource" />
+        <property name="packagesToScan" >
+            <list>
+                <value>ru.belyaev.shop.entity</value>
+            </list>
+        </property>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+        </property>
+        <property name="jpaProperties" >
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQL10Dialect</prop>
+                <prop key="hibernate.show_sql">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="emf" />
+    </bean>
+
+
+
+</beans>

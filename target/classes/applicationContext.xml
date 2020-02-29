@@ -25,15 +25,8 @@
 
     <mvc:annotation-driven />
     <context:component-scan base-package="ru.belyaev.shop" />
-    <mvc:view-controller path="/" view-name="page-template" />
+
     <context:property-placeholder location="classpath:/application.properties" />
-
-    <mvc:resources mapping="/static/**" location="/static/" cache-period="31556926"/>
-
-    <bean id="resolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
-        <property name="prefix" value="/WEB-INF/JSP/"/>
-        <property name="suffix" value=".jsp" />
-    </bean>
 
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
@@ -65,6 +58,7 @@
     <bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="emf" />
     </bean>
+
 
 
 

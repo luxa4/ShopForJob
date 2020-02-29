@@ -6,6 +6,7 @@
 
 package ru.belyaev.shop.repositories;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -25,8 +26,7 @@ public interface OrderDao extends JpaRepository<Order, Long> {
 
     int countOrderByAccount_Id(int id);
 
-    @Query(value = "SELECT * FROM \"order\" WHERE id_account=?1 ORDER BY id DESC offset ?2 limit ?3 ", nativeQuery = true)
-    List<Order> listMyOrders(int id_account, int page, int limit);
-
+    @Query("SELECT ord FROM Order ord WHERE ord.account.id=?1")
+    List<Order> listMyOrders(int id_account, Pageable pageable);
 
 }

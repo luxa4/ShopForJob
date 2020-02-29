@@ -4,19 +4,17 @@ package ru.belyaev.shop.service.impl;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.belyaev.shop.entity.Category;
 import ru.belyaev.shop.entity.Producer;
 import ru.belyaev.shop.entity.Product;
 import ru.belyaev.shop.exception.InternalServerErrorException;
 import ru.belyaev.shop.form.SearchForm;
-import ru.belyaev.shop.jdbc.JDBCUtil;
-import ru.belyaev.shop.jdbc.SearchQuery;
 import ru.belyaev.shop.repositories.*;
 import ru.belyaev.shop.service.ProductService;
 
-import ru.belyaev.shop.util.OffsetBasedPageRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +41,9 @@ class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> listAllProduct(int page, int limit) {
         try {
-            int offset = (page - 1) * limit;
-            return productDao.listAllProduct(offset, limit);
+//            int offset = (page - 1) * limit;
+            Pageable pageable = PageRequest.of(page-1, limit);
+            return productDao.listAllProduct(pageable);
         } catch (Exception e) {
             throw new InternalServerErrorException("Can't execute sql query listAllProduct: " + e.getMessage(), e);
         }
@@ -62,8 +61,8 @@ class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> listProductsByCategory(String categoryUrl, int page, int limit) {
         try {
-            int offset = (page - 1) * limit;
-            return productDao.listProductsByCategory(categoryUrl, offset, limit);
+            Pageable pageable = PageRequest.of(page-1, limit);
+            return productDao.listProductsByCategory(categoryUrl, pageable);
         } catch (Exception e) {
             throw new InternalServerErrorException("Cant execute sql query listProductsByCategory:" + e.getMessage(), e);
         }
@@ -98,41 +97,80 @@ class ProductServiceImpl implements ProductService {
 
 
 
-//    @Override
-//    public List<Product> ListProductBySearchForm(SearchForm searchForm, int page, int limit) {
-//      try  {
-//            int offset = (page - 1) * limit;
-//            SearchQuery sq = buildSearchQuery(searchForm, " p.*, c.name as category, pr.name as producer FROM product p, category c, producer pr " );
-//            sq.getSql().append(" offset ? limit ?");
-//            sq.getParams().add(offset);
-//            sq.getParams().add(limit);
-//            return productDao.ListProductBySearchForm(sq.getSql().toString(), sq.getParams().toArray());
-//        } catch (Exception e) {
-//            throw new InternalServerErrorException("Can't execute sql-query - ListProductBySearchForm - :" + e.getMessage(), e);
-//        }
-//
-//    }
-//
-//    protected SearchQuery buildSearchQuery (SearchForm searchForm, String selectField) {
-//        StringBuilder sql = new StringBuilder("SELECT");
-//        List<Object> params = new ArrayList<>();
-//        sql.append(selectField).append(" WHERE c.id=p.id_category and pr.id=p.id_producer and (p.name ilike ? or p.description ilike ?) ");
-//        params.add("%" + searchForm.getQuery() + "%");
-//        params.add("%" + searchForm.getQuery() + "%");
-//        JDBCUtil.pasteInSqlAndParams(sql , params , searchForm.getCategories(), "c.id=?");
-//        JDBCUtil.pasteInSqlAndParams(sql , params , searchForm.getProducers(), "pr.id=?");
-//        return new SearchQuery(sql, params);
-//    }
-//
-//    @Override
-//    public int countProductBySearchFrom(SearchForm searchForm) {
-//        try  {
-//            SearchQuery sq = buildSearchQuery(searchForm, " count(*) FROM product p, category c, producer pr " );
-//            return productDao.countProductBySearchFrom(sq.getSql().toString(), sq.getParams().toArray());
-//        } catch (Exception e) {
-//            throw new InternalServerErrorException("Can't execute sql-query - countProductBySearchFrom - :" + e.getMessage(), e);
-//        }
-//    }
+    @Override
+    public List<Product> ListProductBySearchForm(SearchForm searchForm, int page, int limit, List<Integer> allCategoriesId, List<Integer> allProducersId) {
+        try  {
+            List<Integer> categoriesId;
+            List<Integer> producersId;
+
+            if (searchForm.isCategoriesNotEmpty()) {
+                categoriesId = searchForm.getCategories();
+            } else {
+                categoriesId = allCategoriesId;
+            }
+
+            if (searchForm.isProducersNotEmpty()) {
+                producersId = searchForm.getProducers();
+            } else {
+                producersId = allProducersId;
+            }
+
+            Pageable pageable = PageRequest.of(page-1, limit);
+            return productDao.ListProductBySearchForm(searchForm.getQuery(), producersId, categoriesId, pageable);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Can't execute sql-query - ListProductBySearchForm - :" + e.getMessage(), e);
+        }
+
+    }
+
+
+    @Override
+    public int countProductBySearchFrom(SearchForm searchForm, List<Integer> allCategoriesId, List<Integer> allProducersId) {
+        try  {
+            List<Integer> categoriesId;
+            List<Integer> producersId;
+
+            if (searchForm.isCategoriesNotEmpty()) {
+                categoriesId = searchForm.getCategories();
+            } else {
+                categoriesId = allCategoriesId;
+            }
+
+            if (searchForm.isProducersNotEmpty()) {
+                producersId = searchForm.getProducers();
+            } else {
+                producersId = allProducersId;
+            }
+
+            return productDao.countProductBySearchFrom(searchForm.getQuery(), producersId, categoriesId);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Can't execute sql-query - countProductBySearchFrom - :" + e.getMessage(), e);
+        }
+    }
+    @Override
+    public List<Integer> getListCategoriesId() {
+        List<Category> categories = categoryDao.findAllByOrderByName();
+        List<Integer> categorieId = new ArrayList<>();
+
+        for (int i=0; i <  categories.size(); i++) {
+            categorieId.add(categories.get(i).getId());
+        }
+        return categorieId;
+    }
+
+
+
+    @Override
+    public List<Integer> getListProducersId() {
+        List<Producer> producers = producerDao.findAllByOrderByName();
+        List<Integer> producersId = new ArrayList<>();
+
+        for (int i=0; i < producers.size(); i++) {
+            producersId.add(producers.get(i).getId());
+        }
+        return producersId;
+    }
+
 
 
 }
