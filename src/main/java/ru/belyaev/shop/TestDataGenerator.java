@@ -20,7 +20,7 @@ public class TestDataGenerator {
     private static final String JDBC_PASSWORD = "victory8";
 
     private static final String IMG_PATH = "external-data/";
-    private static final String MEDIA_PATH = "web/media/";
+    private static final String MEDIA_PATH = "src/main/webapp/static/media/";
 
     private static final boolean useImageLinkInsteadOfCopy = true;
 
