@@ -5,11 +5,9 @@
 -- Dumped from database version 9.5.4
 -- Dumped by pg_dump version 9.5.4
 
--- Started on 2016-08-21 22:26:23
 
 --
--- TOC entry 184 (class 1259 OID 16427)
--- Name: account; Type: TABLE; Schema: public; Owner: -
+-- Таблица аккаунтов
 --
 
 CREATE TABLE account (
@@ -20,8 +18,7 @@ CREATE TABLE account (
 
 
 --
--- TOC entry 187 (class 1259 OID 16460)
--- Name: account_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Id account
 --
 
 CREATE SEQUENCE account_seq
@@ -33,9 +30,7 @@ CREATE SEQUENCE account_seq
 
 
 --
--- TOC entry 181 (class 1259 OID 16395)
--- Name: category; Type: TABLE; Schema: public; Owner: -
---
+-- Таблица категорий товаров
 
 CREATE TABLE category (
     id integer NOT NULL,
@@ -46,9 +41,7 @@ CREATE TABLE category (
 
 
 --
--- TOC entry 185 (class 1259 OID 16434)
--- Name: order; Type: TABLE; Schema: public; Owner: -
---
+-- Таблица заказов
 
 CREATE TABLE "order" (
     id bigint NOT NULL,
@@ -58,9 +51,7 @@ CREATE TABLE "order" (
 
 
 --
--- TOC entry 186 (class 1259 OID 16445)
--- Name: order_item; Type: TABLE; Schema: public; Owner: -
---
+-- Таблица товаров в заказе
 
 CREATE TABLE order_item (
     id bigint NOT NULL,
@@ -71,9 +62,7 @@ CREATE TABLE order_item (
 
 
 --
--- TOC entry 189 (class 1259 OID 16464)
--- Name: order_item_seq; Type: SEQUENCE; Schema: public; Owner: -
---
+-- id товара в заказе
 
 CREATE SEQUENCE order_item_seq
     START WITH 1
@@ -84,9 +73,7 @@ CREATE SEQUENCE order_item_seq
 
 
 --
--- TOC entry 188 (class 1259 OID 16462)
--- Name: order_seq; Type: SEQUENCE; Schema: public; Owner: -
---
+-- id заказ
 
 CREATE SEQUENCE order_seq
     START WITH 1
@@ -97,9 +84,7 @@ CREATE SEQUENCE order_seq
 
 
 --
--- TOC entry 182 (class 1259 OID 16403)
--- Name: producer; Type: TABLE; Schema: public; Owner: -
---
+-- Таблица производителей товара
 
 CREATE TABLE producer (
     id integer NOT NULL,
@@ -109,9 +94,7 @@ CREATE TABLE producer (
 
 
 --
--- TOC entry 183 (class 1259 OID 16409)
--- Name: product; Type: TABLE; Schema: public; Owner: -
---
+-- Таблица продуктов магазина
 
 CREATE TABLE product (
     id integer NOT NULL,
@@ -240,8 +223,6 @@ ALTER TABLE ONLY product
 ALTER TABLE ONLY product
     ADD CONSTRAINT product_fk1 FOREIGN KEY (id_producer) REFERENCES producer(id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
-
--- Completed on 2016-08-21 22:26:23
 
 --
 -- PostgreSQL database dump complete
