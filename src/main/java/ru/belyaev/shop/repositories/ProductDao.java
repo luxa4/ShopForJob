@@ -16,6 +16,7 @@ import ru.belyaev.shop.entity.Product;
 import ru.belyaev.shop.form.SearchForm;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NamedQuery;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 

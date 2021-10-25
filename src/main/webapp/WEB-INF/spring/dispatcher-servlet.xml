@@ -16,25 +16,25 @@
              http://www.springframework.org/schema/data/jpa
         https://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
 
+    <mvc:annotation-driven />
+	<mvc:view-controller path="/" view-name="page-template" />
+	<mvc:resources mapping="/static/**" location="/static/" cache-period="31556926"/>
+
+    <context:component-scan base-package="ru.belyaev.shop" />
+    <context:property-placeholder location="classpath:/application.properties" />
+
+    <bean id="resolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
+        <property name="prefix" value="/WEB-INF/JSP/"/>
+        <property name="suffix" value=".jsp" />
+    </bean>
+
 
     <tx:annotation-driven transaction-manager="txManager" />
 
     <jpa:repositories base-package="ru.belyaev.shop.repositories"
                       entity-manager-factory-ref="emf"
                       transaction-manager-ref="txManager"/>
-
-    <mvc:annotation-driven />
-    <context:component-scan base-package="ru.belyaev.shop" />
-
-    <mvc:view-controller path="/" view-name="page-template" />
-    <context:property-placeholder location="classpath:/application.properties" />
-
-    <mvc:resources mapping="/static/**" location="/static/" cache-period="31556926"/>
-
-    <bean id="resolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
-        <property name="prefix" value="/WEB-INF/JSP/"/>
-        <property name="suffix" value=".jsp" />
-    </bean>
+    
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
         <property name="driverClassName" value="org.postgresql.Driver"/>

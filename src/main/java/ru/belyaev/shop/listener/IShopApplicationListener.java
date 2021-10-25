@@ -25,6 +25,7 @@ public class IShopApplicationListener  implements ServletContextListener {
             ServiceManager serviceManager = context.getBean("serviceManager", ServiceManager.class);
             sce.getServletContext().setAttribute("CATEGORY_LIST", serviceManager.productService.listAllCategories());
             sce.getServletContext().setAttribute("PRODUCER_LIST", serviceManager.productService.listAllProducers());
+            context.close();
         } catch (RuntimeException e) {
             LOGGER.error("Web application 'ishop' init failed: "+e.getMessage(), e);
             throw e;
